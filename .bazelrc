@@ -1,0 +1,37 @@
+startup --windows_enable_symlinks  # <--- fix windows-related issues
+build --enable_runfiles            # <-------|
+
+#####################
+# Performance fixes #
+#####################
+
+# Consider --experimental_remote_merkle_tree_cache_size as well
+build --experimental_remote_merkle_tree_cache
+query --experimental_remote_merkle_tree_cache
+# query --noexperimental_check_output_files --noexperimental_check_external_repository_files
+build --incompatible_remote_results_ignore_disk
+
+##########################
+# Correctness guarantees #
+##########################
+
+startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
+build --sandbox_default_allow_network=false
+test --incompatible_exclusive_test_sandboxed
+build --incompatible_strict_action_env
+build --nolegacy_external_runfiles
+build --incompatible_remote_results_ignore_disk
+build --incompatible_default_to_explicit_init_py
+build --incompatible_allow_tags_propagation
+fetch --incompatible_allow_tags_propagation
+query --incompatible_allow_tags_propagation
+
+##############
+# BuildBuddy #
+##############
+
+build --bes_results_url=https://app.buildbuddy.io/invocation/
+build --bes_backend=grpcs://remote.buildbuddy.io
+build --remote_cache=grpcs://remote.buildbuddy.io
+build --noremote_upload_local_results # Uploads logs & artifacts without writing to cache
+build --remote_timeout=3600

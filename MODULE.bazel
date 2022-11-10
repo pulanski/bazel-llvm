@@ -1,0 +1,8 @@
+module(
+    name = "bazel-llvm",
+    version = "0.1.0",
+    authors = "pulanski",
+    bazel_compatibility = ">=5.3.2",
+)
+
+bazel_dep(name = "rules_cc", version = "0.0.2")
