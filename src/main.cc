@@ -13,7 +13,7 @@
 using namespace std;
 
 /// top ::= definition | external | expression | ';'
-static void MainLoop() {
+static void mainLoop() {
     while (true) {
         fprintf(stderr, "ready> ");
         switch (CurTok) {
@@ -42,9 +42,11 @@ int main(int argc, char* argv[]) {
     LOG(INFO) << "Begin REPL...";
 
     // Run the main "interpreter loop" now.
-    // MainLoop();
+    // mainLoop();
 
     LOG(INFO) << "Lexing...";
+
+    LOG(INFO) << CurTok;
 
     // vector<string> v = {"foo", "bar", "baz"};
     // string s = absl::StrJoin(v, "-");

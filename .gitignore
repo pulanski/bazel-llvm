@@ -1,6 +1,5 @@
-################
-# System Files #
-################
+# Bazel output directories (e.g. bazel-bin, bazel-testlogs, etc.)
+/bazel-*
 
 # MacOS directory attributes
 **/.DS_Store
@@ -8,12 +7,8 @@
 # Windows directory attributes
 **/Thumbs.db
 
-####################
-# Extraneous files #
-####################
-
 # Snyk test reports
 **/.dccache
 
-# .env file
+# .env file for environment variables
 .env
