@@ -19,3 +19,18 @@ indent_size = 2
 
 [*.json]
 indent_size = 2
+
+[*.bzl]
+indent_size = 4
+
+[*.bazel]
+indent_size = 4
+
+[BUILD]
+indent_size = 4
+
+[WORKSPACE]
+indent_size = 4
+
+[MODULE]
+indent_size = 4

@@ -1,0 +1,60 @@
+# Declares that this directory is the root of a Bazel workspace.
+# See https://docs.bazel.build/versions/main/build-ref.html#workspace
+workspace(
+    # How this workspace would be referenced with absolute labels from another workspace
+    name = "com_pulanski_bazel_llvm",
+)
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# GoogleTest
+GOOGLE_TEST_SHA = "eb70a6d4520f940956a6b3e37d205d92736bb104c6a1b2b9f82bfc41bd7a2b34"
+GOOGLE_TEST_COMMIT = "28e1da21d8d677bc98f12ccc7fc159ff19e8e817"
+
+# Gflags
+GFLAGS_SHA = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf"
+GFLAGS_VERSION = "2.2.2"
+
+# Glog
+GLOG_SHA = "122fb6b712808ef43fbf80f75c52a21c9760683dae470154f02bddfc61135022"
+GLOG_VERSION = "0.6.0"
+
+# Abseil
+ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
+ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
+
+# Configure GoogleTest, a testing framework for C++ from Google
+# See https://github.com/google/googletest for more details.
+http_archive(
+    name = "com_google_googletest",
+    sha256 = GOOGLE_TEST_SHA,
+    strip_prefix = "googletest-%s" % GOOGLE_TEST_COMMIT,
+    urls = ["https://github.com/google/googletest/archive/%s.zip" % GOOGLE_TEST_COMMIT],
+)
+
+# Configure gflags, a library for command line flag parsing in C++
+# See https://github.com/gflags/gflags for more details.
+http_archive(
+    name = "com_github_gflags_gflags",
+    sha256 = GFLAGS_SHA,
+    strip_prefix = "gflags-%s" % GFLAGS_VERSION,
+    urls = ["https://github.com/gflags/gflags/archive/v%s.tar.gz" % GFLAGS_VERSION],
+)
+
+# Configure Glog, a logging framework for C++ from Google
+# See https://github.com/google/glog for more details.
+http_archive(
+    name = "com_google_glog",
+    sha256 = GLOG_SHA,
+    strip_prefix = "glog-%s" % GLOG_VERSION,
+    urls = ["https://github.com/google/glog/archive/v%s.zip" % GLOG_VERSION],
+)
+
+# Configure Abseil, core C++ libraries from Google
+# See https://github.com/abseil/abseil-cpp for more details.
+http_archive(
+  name = "com_google_absl",
+  sha256 = ABSEIL_SHA,
+  strip_prefix = "abseil-cpp-%s" % ABSEIL_COMMIT,
+  urls = ["https://github.com/abseil/abseil-cpp/archive/%s.zip" % ABSEIL_COMMIT],
+)

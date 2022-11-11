@@ -1,0 +1,8 @@
+{
+  "watch": [
+    "src/",
+    "greeting/",
+    "./"
+  ],
+  "ext": "h,cc,bazel,json"
+}

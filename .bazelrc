@@ -1,9 +1,23 @@
+build --disk_cache=~/.cache/bazel-disk
+fetch --disk_cache=~/.cache/bazel-disk
+query --disk_cache=~/.cache/bazel-disk
+sync --disk_cache=~/.cache/bazel-disk
+test --disk_cache=~/.cache/bazel-disk
+
+# Bazel doesn't have a native understanding of C++ versions. This was
+# added for Java in 2021; hopefully it might arrive for C++ someday.
+
+build --enable_platform_specific_config
+# linux, macos, windows, freebsd, and openbsd.
+
+build:linux --cxxopt='-std=c++17'
+build:macos --cxxopt='-std=c++17'
+build:windows --cxxopt='-std:c++17' # Note slightly different syntax.
+
 startup --windows_enable_symlinks  # <--- fix windows-related issues
 build --enable_runfiles            # <-------|
 
-#####################
-# Performance fixes #
-#####################
+# Performance fixes
 
 # Consider --experimental_remote_merkle_tree_cache_size as well
 build --experimental_remote_merkle_tree_cache
@@ -11,9 +25,7 @@ query --experimental_remote_merkle_tree_cache
 # query --noexperimental_check_output_files --noexperimental_check_external_repository_files
 build --incompatible_remote_results_ignore_disk
 
-##########################
-# Correctness guarantees #
-##########################
+# Correctness guarantees
 
 startup --host_jvm_args=-DBAZEL_TRACK_SOURCE_DIRECTORIES=1
 build --sandbox_default_allow_network=false
@@ -26,9 +38,7 @@ build --incompatible_allow_tags_propagation
 fetch --incompatible_allow_tags_propagation
 query --incompatible_allow_tags_propagation
 
-##############
-# BuildBuddy #
-##############
+# BuildBuddy
 
 build --bes_results_url=https://app.buildbuddy.io/invocation/
 build --bes_backend=grpcs://remote.buildbuddy.io
