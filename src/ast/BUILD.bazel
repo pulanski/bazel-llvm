@@ -1,0 +1,41 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+expr_ast_header = "ExprAST.h"
+
+cc_library(
+    name = "NumberAST",
+    srcs = ["NumberAST.cc"],
+    hdrs = [
+        "NumberAST.h",
+        expr_ast_header,
+    ],
+)
+
+cc_library(
+    name = "VariableExprAST",
+    srcs = ["VariableExprAST.cc"],
+    hdrs = [
+        "VariableExprAST.h",
+        expr_ast_header,
+    ],
+)
+
+cc_library(
+    name = "BinaryExprAST",
+    srcs = ["BinaryExprAST.cc"],
+    hdrs = [
+        "BinaryExprAST.h",
+        expr_ast_header,
+    ],
+)
+
+cc_library(
+    name = "CallExprAST",
+    srcs = ["CallExprAST.cc"],
+    hdrs = [
+        "CallExprAST.h",
+        expr_ast_header,
+    ],
+)

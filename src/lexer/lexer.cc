@@ -8,6 +8,7 @@
 
 using namespace std;
 
+// CurTok is the current token the parser is looking at.
 int CurTok;
 string IdentifierStr;
 double NumVal;
@@ -80,6 +81,9 @@ int gettok() {
     return 0;
 }
 
+/// CurTok/getNextToken - Provide a simple token buffer.
+/// getNextToken reads another token from the
+/// lexer and updates CurTok with its results.
 int getNextToken() { return CurTok = gettok(); }
 
 // regex binary_digit("[0-1]");
