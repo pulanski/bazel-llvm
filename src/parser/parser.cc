@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../logger/logger.h"
 
@@ -15,8 +16,8 @@ int getTokenPrecedence() {
         return -1;
     }
 
+    // Make sure it's a declared binop.
     int tokPrec = binOpPrecedence[curTok];
-
     if (tokPrec <= 0) {
         return -1;
     }
@@ -27,25 +28,25 @@ int getTokenPrecedence() {
 /// numberexpr ::= number
 unique_ptr<ExprAST> parseNumberExpr() {
     auto number = make_unique<NumberExprAST>(numVal);
-    getNextToken();
+    getNextToken();  // consume the number
     return std::move(number);
 }
 
 /// parenexpr ::= '(' expression ')'
 unique_ptr<ExprAST> parseParenExpr() {
     getNextToken();  // skip `(`
-    // auto expr = parseExpression();
-    // if (!expr) {
-    //     return nullptr;
-    // }
+    auto expr = parseExpression();
+    if (!expr) {
+        return nullptr;
+    }
 
     if (curTok != ')') {
         return logSyntaxError("Expected `)`, but found token " +
                               to_string(curTok));
     }
+
     getNextToken();  // skip `)`
-    // return expr;
-    return nullptr;
+    return expr;
 }
 
 /// identifierexpr
@@ -86,8 +87,7 @@ unique_ptr<ExprAST> parseIdentifierExpr() {
         }
     }
 
-    // Eat the `)`
-    getNextToken();
+    getNextToken();  // Eat the `)`
 
     return make_unique<CallExprAST>(idName, std::move(args));
 }
@@ -109,18 +109,6 @@ unique_ptr<ExprAST> parsePrimary() {
         case '(':
             return parseParenExpr();
     }
-}
-
-/// expression
-///   ::= primary binoprhs
-unique_ptr<ExprAST> parseExpression() {
-    auto lhs = parsePrimary();
-
-    if (!lhs) {
-        return nullptr;
-    }
-
-    return parseBinOpRHS(0, std::move(lhs));
 }
 
 /// binoprhs
@@ -160,5 +148,112 @@ unique_ptr<ExprAST> parseBinOpRHS(int expr_precedence,
 
         // merge the LHS and RHS
         lhs = make_unique<BinaryExprAST>(binOp, std::move(lhs), std::move(rhs));
+    }
+}
+
+/// expression
+///   ::= primary binoprhs
+unique_ptr<ExprAST> parseExpression() {
+    auto lhs = parsePrimary();
+
+    if (!lhs) {
+        return nullptr;
+    }
+
+    return parseBinOpRHS(0, std::move(lhs));
+}
+
+/// prototype
+///   ::= id '(' id* ')'
+unique_ptr<PrototypeAST> parsePrototype() {
+    if (curTok != TokIdentifier) {
+        logPrototypeSyntaxError(
+            "Expected function name in prototype, but instead found token, `" +
+            to_string(curTok) + "`.");
+    }
+
+    string fnName = identifierStr;
+    getNextToken();
+
+    if (curTok != '(') {
+        return logPrototypeSyntaxError(
+            "Expected '(' in prototype, but instead found token, `" +
+            to_string(curTok) + "`.");
+    }
+
+    vector<string> argNames;
+
+    while (getNextToken() == TokIdentifier) {
+        argNames.push_back(identifierStr);
+    }
+
+    getNextToken();  // eat `)`.
+
+    return make_unique<PrototypeAST>(fnName, argNames);
+}
+
+/// definition ::= 'def' prototype expression
+unique_ptr<FunctionAST> parseDefinition() {
+    getNextToken();  // eat `def`
+
+    auto proto = parsePrototype();
+    if (!proto) {
+        return nullptr;
+    }
+
+    if (auto expr = parseExpression()) {
+        return make_unique<FunctionAST>(std::move(proto), std::move(expr));
+    }
+
+    return nullptr;
+}
+
+/// toplevelexpr ::= expression
+unique_ptr<FunctionAST> parseTopLevelExpr() {
+    if (auto expr = parseExpression()) {
+        // Make an anonymous proto.
+        auto proto = make_unique<PrototypeAST>("__anon_expr", vector<string>());
+
+        return make_unique<FunctionAST>(std::move(proto), std::move(expr));
+    }
+    return nullptr;
+}
+
+/// external ::= 'extern' prototype
+unique_ptr<PrototypeAST> parseExtern() {
+    getNextToken();  // eat `extern`
+
+    return parsePrototype();
+}
+
+///////////////////////
+// Top-level Parsing //
+///////////////////////
+
+void handleDefinition() {
+    if (parseDefinition()) {
+        logInfo("Successfully parsed a function definition.");
+    } else {
+        // Skip the token for error recovery
+        getNextToken();
+    }
+}
+
+void handleExtern() {
+    if (parseExtern()) {
+        logInfo("Successfully parsed an extern.");
+    } else {
+        // Skip the token for error recovery
+        getNextToken();
+    }
+}
+
+void handleTopLevelExpression() {
+    // Evaluate a top-level expression into an anonymous function.
+    if (parseTopLevelExpr()) {
+        logInfo("Successfully parsed a top level expression.");
+    } else {
+        // Skip the token for error recovery
+        getNextToken();
     }
 }

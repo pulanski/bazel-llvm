@@ -1,12 +1,13 @@
 // #include <fmt/core.h>
 #include <glog/logging.h>
 
+#include <cstdio>
 #include <iostream>
 #include <regex>
 #include <string>
 #include <vector>
 
-#include "absl/strings/str_join.h"
+// #include "absl/strings/str_join.h"
 #include "lexer/lexer.h"
 #include "lexer/token.h"
 #include "logger/logger.h"
@@ -25,16 +26,18 @@ static void mainLoop() {
                 getNextToken();
                 break;
             case TokDef:
-                // HandleDefinition();
+                handleDefinition();
                 break;
             case TokExtern:
-                // HandleExtern();
+                handleExtern();
                 break;
             default:
-                // HandleTopLevelExpression();
+                handleTopLevelExpression();
                 break;
         }
     }
+
+    LOG(INFO) << "exited";
 }
 
 // Main driver code.
@@ -43,12 +46,19 @@ int main(int argc, char* argv[]) {
     google::InitGoogleLogging(argv[0]);
     LOG(INFO) << "Begin REPL...";
 
+    // Install standard binary operators.
+    // 1 is lowest precedence.
+    binOpPrecedence['<'] = 10;
+    binOpPrecedence['+'] = 20;
+    binOpPrecedence['-'] = 20;
+    binOpPrecedence['*'] = 40;  // highest.
+
+    // Prime the first token.
+    fprintf(stderr, "ready> ");
+    getNextToken();
+
     // Run the main "interpreter loop" now.
-    // mainLoop();
-
-    LOG(INFO) << "Lexing...";
-
-    parseNumberExpr();
+    mainLoop();
 
     return 0;
 }

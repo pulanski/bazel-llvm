@@ -25,7 +25,7 @@ unique_ptr<ExprAST> logSyntaxError(const string& message) {
     return nullptr;
 }
 
-unique_ptr<PrototypeAST> logSyntaxErrorP(const string& message) {
+unique_ptr<PrototypeAST> logPrototypeSyntaxError(const string& message) {
     logError("Syntax Error (Prototype): " + message);
     return nullptr;
 }

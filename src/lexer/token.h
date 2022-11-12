@@ -3,6 +3,8 @@
 
 #include <string>
 
+using namespace std;
+
 // The lexer returns tokens [0-255] if it is an unknown character, otherwise one
 // of these for known things.
 enum Token {
@@ -17,7 +19,7 @@ enum Token {
     TokNumber = -5,
 };
 
-extern std::string identifierStr;  // Filled in if tok_identifier
-extern double numVal;              // Filled in if tok_number
+extern string identifierStr;  // Filled in if tok_identifier
+extern double numVal;         // Filled in if tok_number
 
 #endif  // !__TOKEN_H__

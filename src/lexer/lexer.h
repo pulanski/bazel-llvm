@@ -10,4 +10,7 @@ extern int curTok;
 int gettok();
 int getNextToken();
 
+extern string identifierStr;
+extern double numVal;
+
 #endif  // !__LEXER_H__
