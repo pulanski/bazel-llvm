@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "PrototypeAST.h"
+#include "prototype_ast.h"
 
 using namespace std;
 

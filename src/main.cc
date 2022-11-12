@@ -9,6 +9,8 @@
 #include "absl/strings/str_join.h"
 #include "lexer/lexer.h"
 #include "lexer/token.h"
+#include "logger/logger.h"
+#include "parser/parser.h"
 
 using namespace std;
 
@@ -16,11 +18,11 @@ using namespace std;
 static void mainLoop() {
     while (true) {
         fprintf(stderr, "ready> ");
-        switch (CurTok) {
+        switch (curTok) {
             case TokEof:
                 return;
             case ';':  // ignore top-level semicolons.
-                // getNextToken();
+                getNextToken();
                 break;
             case TokDef:
                 // HandleDefinition();
@@ -46,11 +48,7 @@ int main(int argc, char* argv[]) {
 
     LOG(INFO) << "Lexing...";
 
-    LOG(INFO) << CurTok;
+    parseNumberExpr();
 
-    // vector<string> v = {"foo", "bar", "baz"};
-    // string s = absl::StrJoin(v, "-");
-    //
-    // cout << "Joined string: " << s << "\n";
     return 0;
 }

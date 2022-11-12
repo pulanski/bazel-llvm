@@ -6,7 +6,7 @@
 
 using namespace std;
 
-extern int CurTok;
+extern int curTok;
 int gettok();
 int getNextToken();
 
