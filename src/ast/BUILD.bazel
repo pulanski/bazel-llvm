@@ -2,40 +2,67 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 
 package(default_visibility = ["//visibility:public"])
 
-expr_ast_header = "ExprAST.h"
-
 cc_library(
-    name = "NumberAST",
-    srcs = ["NumberAST.cc"],
+    name = "expr_ast",
     hdrs = [
-        "NumberAST.h",
-        expr_ast_header,
+        "expr_ast.h"
     ],
+    includes = ["."],
 )
 
 cc_library(
-    name = "VariableExprAST",
-    srcs = ["VariableExprAST.cc"],
+    name = "binary_expr_ast",
+    srcs = ["binary_expr_ast.cc"],
     hdrs = [
-        "VariableExprAST.h",
-        expr_ast_header,
+        "binary_expr_ast.h",
     ],
+    includes = ["."],
 )
 
 cc_library(
-    name = "BinaryExprAST",
-    srcs = ["BinaryExprAST.cc"],
+    name = "call_expr_ast",
+    srcs = ["call_expr_ast.cc"],
     hdrs = [
-        "BinaryExprAST.h",
-        expr_ast_header,
+        "call_expr_ast.h",
     ],
+    includes = ["."],
 )
 
 cc_library(
-    name = "CallExprAST",
-    srcs = ["CallExprAST.cc"],
+    name = "function_ast",
+    srcs = ["function_ast.cc"],
     hdrs = [
-        "CallExprAST.h",
-        expr_ast_header,
+        "function_ast.h",
     ],
+    includes = ["."],
+)
+
+cc_library(
+    name = "number_expr_ast",
+    srcs = ["number_expr_ast.cc"],
+    hdrs = [
+        "number_expr_ast.h",
+        "expr_ast.h"
+    ],
+    deps = [
+        ":expr_ast"
+    ]
+)
+
+cc_library(
+    name = "prototype_ast",
+    srcs = ["prototype_ast.cc"],
+    hdrs = [
+        "prototype_ast.h",
+    ],
+    includes = ["."],
+)
+
+cc_library(
+    name = "variable_expr_ast",
+    srcs = ["variable_expr_ast.cc"],
+    hdrs = [
+        "variable_expr_ast.h",
+    ],
+    includes = ["."],
 )

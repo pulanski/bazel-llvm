@@ -2,12 +2,12 @@
 
 #include <string>
 
-#include "ExprAST.h"
+#include "expr_ast.h"
 
 using namespace std;
 
 // Expression class for referencing a variable
-class VariableExprAST : ExprAST {
+class VariableExprAST : public ExprAST {
     string name_;
 
    public:

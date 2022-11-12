@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "ExprAST.h"
+#include "expr_ast.h"
 
 using namespace std;
 
 // Expression class for function calls
-class CallExprAST : ExprAST {
+class CallExprAST : public ExprAST {
     string callee_;
     vector<unique_ptr<ExprAST>> args_;
 

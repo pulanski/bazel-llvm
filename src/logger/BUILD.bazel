@@ -1,0 +1,18 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "logger",
+    srcs = ["logger.cc"],
+    hdrs = [
+        "logger.h",
+         # "../ast/expr_ast.h",
+    ],
+    # hacky solution here
+    # TODO need a way to depend on expr_ast.h
+    deps = [
+        "//src/ast:number_expr_ast",
+        "//src/ast:prototype_ast",
+    ],
+)

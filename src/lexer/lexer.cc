@@ -9,32 +9,32 @@
 using namespace std;
 
 // CurTok is the current token the parser is looking at.
-int CurTok;
-string IdentifierStr;
-double NumVal;
+int curTok;
+string identifierStr;
+double numVal;
 
 int gettok() {
-    static int LastChar = ' ';
+    static int lastChar = ' ';
 
     // The first thing we need to do is ignore whitespace between tokens
-    while (isspace((LastChar))) {
-        LastChar = getchar();
+    while (isspace((lastChar))) {
+        lastChar = getchar();
     }
 
     // Next thing is recognize identifiers and keywords
-    if (isalpha(LastChar)) {
-        IdentifierStr = LastChar;
+    if (isalpha(lastChar)) {
+        identifierStr = lastChar;
 
         // Stacking together all alphanumeric characters into IdentifierStr
-        while (isalnum(LastChar = getchar())) {
-            IdentifierStr += LastChar;
+        while (isalnum(lastChar = getchar())) {
+            identifierStr += lastChar;
         }
 
-        if (IdentifierStr == "def") {
+        if (identifierStr == "def") {
             return TokDef;
         }
 
-        if (IdentifierStr == "extern") {
+        if (identifierStr == "extern") {
             return TokExtern;
         }
 
@@ -42,40 +42,40 @@ int gettok() {
     }
 
     // Stacking together only numeric values
-    if (isdigit(LastChar) || LastChar == '.') {
+    if (isdigit(lastChar) || lastChar == '.') {
         std::string NumStr;
 
         do {
-            NumStr += LastChar;
-            LastChar = getchar();
-        } while (isdigit(LastChar) || LastChar == '.');
+            NumStr += lastChar;
+            lastChar = getchar();
+        } while (isdigit(lastChar) || lastChar == '.');
 
         // convert numeric string into numeric values
         // and store in NumVal
-        NumVal = strtod(NumStr.c_str(), nullptr);
+        numVal = strtod(NumStr.c_str(), nullptr);
         return TokNumber;
     }
 
     // Handling comments by skipping to the end of the line and
     // returning the next token
-    if (LastChar == '#') {
+    if (lastChar == '#') {
         do {
-            LastChar = getchar();
-        } while (LastChar != EOF && LastChar != '\n' && LastChar != '\r');
+            lastChar = getchar();
+        } while (lastChar != EOF && lastChar != '\n' && lastChar != '\r');
 
-        if (LastChar != EOF) {
+        if (lastChar != EOF) {
             return gettok();
         }
     }
 
     // Finally, if the input doesn't match one of the above cases
     // it's either an operator character like '+' or the end of the file
-    if (LastChar == EOF) {
+    if (lastChar == EOF) {
         return TokEof;
     }
 
-    int ThisChar = LastChar;
-    LastChar = getchar();
+    int ThisChar = lastChar;
+    lastChar = getchar();
     return ThisChar;
 
     return 0;
@@ -84,7 +84,7 @@ int gettok() {
 /// CurTok/getNextToken - Provide a simple token buffer.
 /// getNextToken reads another token from the
 /// lexer and updates CurTok with its results.
-int getNextToken() { return CurTok = gettok(); }
+int getNextToken() { return curTok = gettok(); }
 
 // regex binary_digit("[0-1]");
 // regex octal_digit("[0-7]");

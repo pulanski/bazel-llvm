@@ -17,7 +17,7 @@ enum Token {
     TokNumber = -5,
 };
 
-extern std::string IdentifierStr;  // Filled in if tok_identifier
-extern double NumVal;              // Filled in if tok_number
+extern std::string identifierStr;  // Filled in if tok_identifier
+extern double numVal;              // Filled in if tok_number
 
 #endif  // !__TOKEN_H__

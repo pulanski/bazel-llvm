@@ -2,12 +2,12 @@
 
 #include <utility>
 
-#include "ExprAST.h"
+#include "expr_ast.h"
 
 using namespace std;
 
 // Expression class for referencing a variable
-class BinaryExprAST : ExprAST {
+class BinaryExprAST : public ExprAST {
     char op_;
     unique_ptr<ExprAST> lhs_, rhs_;
 
