@@ -25,10 +25,6 @@ GLOG_VERSION = "0.6.0"
 ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
 ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
 
-# LLVM
-LLVM_SHA = "50b3ef31b228ea0c96ae074005bfac087c56e6a4b1c147592dd33f41cad0706b"
-LLVM_COMMIT = "81d5412439efd0860c0a8dd51b831204f118d485"
-
 # Configure GoogleTest, a testing framework for C++ from Google
 # See https://github.com/google/googletest for more details.
 http_archive(
@@ -72,3 +68,21 @@ llvm(
     name = "llvm",
     workspace_name = WORKSPACE_NAME,
 )
+
+# HEDRON_SHA = ""
+
+# Hedron's Compile Commands Extractor for Bazel
+# https://github.com/hedronvision/bazel-compile-commands-extractor
+http_archive(
+    name = "hedron_compile_commands",
+
+    # Replace the commit hash in both places (below) with the latest, rather than using the stale one here.
+    # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
+    url = "https://github.com/hedronvision/bazel-compile-commands-extractor/archive/c200ce8b3e0baa04fa5cc3fb222260c9ea06541f.tar.gz",
+    strip_prefix = "bazel-compile-commands-extractor-c200ce8b3e0baa04fa5cc3fb222260c9ea06541f",
+    # When you first run this tool, it'll recommend a sha256 hash to put here with a message like: "DEBUG: Rule 'hedron_compile_commands' indicated that a canonical reproducible form can be obtained by modifying arguments sha256 = ..."
+)
+
+load("@hedron_compile_commands//:workspace_setup.bzl", "hedron_compile_commands_setup")
+
+hedron_compile_commands_setup()
