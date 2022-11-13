@@ -4,7 +4,10 @@
 #include <string>
 #include <vector>
 
+#include "../kaleidoscope/kaleidoscope.h"
+#include "../logger/logger.h"
 #include "expr_ast.h"
+#include "llvm/IR/IRBuilder.h"
 
 using namespace std;
 
@@ -16,4 +19,5 @@ class CallExprAST : public ExprAST {
    public:
     CallExprAST(const string& callee, vector<unique_ptr<ExprAST>> args)
         : callee_(callee), args_(std::move(args)) {}
+    llvm::Value* codegen() override;
 };

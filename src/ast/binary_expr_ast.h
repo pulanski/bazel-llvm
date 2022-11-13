@@ -2,7 +2,10 @@
 
 #include <utility>
 
+#include "../kaleidoscope/kaleidoscope.h"
+#include "../logger/logger.h"
 #include "expr_ast.h"
+// #include "llvm/IR/Value.h"
 
 using namespace std;
 
@@ -14,4 +17,5 @@ class BinaryExprAST : public ExprAST {
    public:
     BinaryExprAST(char op, unique_ptr<ExprAST> lhs, unique_ptr<ExprAST> rhs)
         : op_(op), lhs_(std::move(lhs)), rhs_(std::move(rhs)) {}
+    llvm::Value* codegen() override;
 };

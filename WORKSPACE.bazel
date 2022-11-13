@@ -1,8 +1,10 @@
+WORKSPACE_NAME = "com_pulanski_bazel_llvm"
+
 # Declares that this directory is the root of a Bazel workspace.
 # See https://docs.bazel.build/versions/main/build-ref.html#workspace
 workspace(
     # How this workspace would be referenced with absolute labels from another workspace
-    name = "com_pulanski_bazel_llvm",
+    name = WORKSPACE_NAME,
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
@@ -22,6 +24,10 @@ GLOG_VERSION = "0.6.0"
 # Abseil
 ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
 ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
+
+# LLVM
+LLVM_SHA = "50b3ef31b228ea0c96ae074005bfac087c56e6a4b1c147592dd33f41cad0706b"
+LLVM_COMMIT = "81d5412439efd0860c0a8dd51b831204f118d485"
 
 # Configure GoogleTest, a testing framework for C++ from Google
 # See https://github.com/google/googletest for more details.
@@ -57,4 +63,12 @@ http_archive(
   sha256 = ABSEIL_SHA,
   strip_prefix = "abseil-cpp-%s" % ABSEIL_COMMIT,
   urls = ["https://github.com/abseil/abseil-cpp/archive/%s.zip" % ABSEIL_COMMIT],
+)
+
+# Configure LLVM, compiler middle/backend infrastructure
+load("//build_defs:llvm.bzl", "llvm")
+
+llvm(
+    name = "llvm",
+    workspace_name = WORKSPACE_NAME,
 )
