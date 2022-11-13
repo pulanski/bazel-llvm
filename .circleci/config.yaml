@@ -1,0 +1,27 @@
+version: 2.1
+
+orbs:
+    docker: circleci/docker@2.1.3
+
+executors:
+    bazel:
+        docker:
+            - image: nickdecooman/debian-bazelisk:4d03b5a
+
+jobs:
+    build_test:
+        executor: bazel
+        resource_class: large
+        steps:
+            - checkout
+            - run:
+                  name: Bazel build
+                  command: bazel build ...
+            - run:
+                  name: Bazel test
+                  command: bazel test ...
+
+workflows:
+    main:
+        jobs:
+            - build_test
