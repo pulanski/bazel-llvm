@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <regex>
 
 #include "token.h"
@@ -13,7 +14,7 @@ int curTok;
 string identifierStr;
 double numVal;
 
-int gettok() {
+int getTok() {
     static int lastChar = ' ';
 
     // The first thing we need to do is ignore whitespace between tokens
@@ -43,16 +44,16 @@ int gettok() {
 
     // Stacking together only numeric values
     if (isdigit(lastChar) || lastChar == '.') {
-        std::string NumStr;
+        string numStr;
 
         do {
-            NumStr += lastChar;
+            numStr += lastChar;
             lastChar = getchar();
         } while (isdigit(lastChar) || lastChar == '.');
 
         // convert numeric string into numeric values
         // and store in NumVal
-        numVal = strtod(NumStr.c_str(), nullptr);
+        numVal = strtod(numStr.c_str(), nullptr);
         return TokNumber;
     }
 
@@ -64,7 +65,7 @@ int gettok() {
         } while (lastChar != EOF && lastChar != '\n' && lastChar != '\r');
 
         if (lastChar != EOF) {
-            return gettok();
+            return getTok();
         }
     }
 
@@ -74,17 +75,16 @@ int gettok() {
         return TokEof;
     }
 
-    int ThisChar = lastChar;
+    // Otherwise, just return the character as its ascii value.
+    int thisChar = lastChar;
     lastChar = getchar();
-    return ThisChar;
-
-    return 0;
+    return thisChar;
 }
 
 /// CurTok/getNextToken - Provide a simple token buffer.
 /// getNextToken reads another token from the
 /// lexer and updates CurTok with its results.
-int getNextToken() { return curTok = gettok(); }
+int getNextToken() { return curTok = getTok(); }
 
 // regex binary_digit("[0-1]");
 // regex octal_digit("[0-7]");

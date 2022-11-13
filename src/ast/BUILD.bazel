@@ -8,6 +8,7 @@ cc_library(
         "expr_ast.h"
     ],
     includes = ["."],
+    deps = ["@llvm"],
 )
 
 cc_library(
@@ -17,6 +18,12 @@ cc_library(
         "binary_expr_ast.h",
     ],
     includes = ["."],
+    deps = [
+        # "@llvm",
+        "//src/kaleidoscope",
+        "//src/logger",
+        ":expr_ast",
+    ]
 )
 
 cc_library(
@@ -26,6 +33,12 @@ cc_library(
         "call_expr_ast.h",
     ],
     includes = ["."],
+    deps = [
+        "@llvm",
+        "//src/kaleidoscope",
+        "//src/logger",
+        ":expr_ast",
+    ]
 )
 
 cc_library(
@@ -42,10 +55,10 @@ cc_library(
     srcs = ["number_expr_ast.cc"],
     hdrs = [
         "number_expr_ast.h",
-        "expr_ast.h"
     ],
     deps = [
-        ":expr_ast"
+        "//src/kaleidoscope",
+        ":expr_ast",
     ]
 )
 
@@ -65,4 +78,9 @@ cc_library(
         "variable_expr_ast.h",
     ],
     includes = ["."],
+    deps = [
+        "//src/kaleidoscope",
+        "//src/logger",
+        ":expr_ast",
+    ]
 )

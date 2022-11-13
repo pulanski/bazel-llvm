@@ -14,6 +14,7 @@ void logInfo(const string& message);
 
 unique_ptr<ExprAST> logSyntaxError(const string& message);
 unique_ptr<PrototypeAST> logPrototypeSyntaxError(const string& message);
+llvm::Value* logCodegenError(const string& message);
 
 /*
    cout << reset_terminal              Restores the terminal to it's original

@@ -7,12 +7,9 @@ cc_library(
     srcs = ["logger.cc"],
     hdrs = [
         "logger.h",
-         # "../ast/expr_ast.h",
     ],
-    # hacky solution here
-    # TODO need a way to depend on expr_ast.h
     deps = [
-        "//src/ast:number_expr_ast",
+        "//src/ast:expr_ast",
         "//src/ast:prototype_ast",
     ],
 )
