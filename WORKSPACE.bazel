@@ -11,18 +11,22 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # GoogleTest
 GOOGLE_TEST_SHA = "eb70a6d4520f940956a6b3e37d205d92736bb104c6a1b2b9f82bfc41bd7a2b34"
+
 GOOGLE_TEST_COMMIT = "28e1da21d8d677bc98f12ccc7fc159ff19e8e817"
 
 # Gflags
 GFLAGS_SHA = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf"
+
 GFLAGS_VERSION = "2.2.2"
 
 # Glog
 GLOG_SHA = "122fb6b712808ef43fbf80f75c52a21c9760683dae470154f02bddfc61135022"
+
 GLOG_VERSION = "0.6.0"
 
 # Abseil
 ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
+
 ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
 
 # Configure GoogleTest, a testing framework for C++ from Google
@@ -55,10 +59,10 @@ http_archive(
 # Configure Abseil, core C++ libraries from Google
 # See https://github.com/abseil/abseil-cpp for more details.
 http_archive(
-  name = "com_google_absl",
-  sha256 = ABSEIL_SHA,
-  strip_prefix = "abseil-cpp-%s" % ABSEIL_COMMIT,
-  urls = ["https://github.com/abseil/abseil-cpp/archive/%s.zip" % ABSEIL_COMMIT],
+    name = "com_google_absl",
+    sha256 = ABSEIL_SHA,
+    strip_prefix = "abseil-cpp-%s" % ABSEIL_COMMIT,
+    urls = ["https://github.com/abseil/abseil-cpp/archive/%s.zip" % ABSEIL_COMMIT],
 )
 
 # Configure LLVM, compiler middle/backend infrastructure
@@ -69,17 +73,17 @@ llvm(
     workspace_name = WORKSPACE_NAME,
 )
 
-# HEDRON_SHA = ""
+HEDRON_SHA = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
 
 # Hedron's Compile Commands Extractor for Bazel
 # https://github.com/hedronvision/bazel-compile-commands-extractor
 http_archive(
     name = "hedron_compile_commands",
+    strip_prefix = "bazel-compile-commands-extractor-%s" % HEDRON_SHA,
 
     # Replace the commit hash in both places (below) with the latest, rather than using the stale one here.
     # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
-    url = "https://github.com/hedronvision/bazel-compile-commands-extractor/archive/c200ce8b3e0baa04fa5cc3fb222260c9ea06541f.tar.gz",
-    strip_prefix = "bazel-compile-commands-extractor-c200ce8b3e0baa04fa5cc3fb222260c9ea06541f",
+    url = "https://github.com/hedronvision/bazel-compile-commands-extractor/archive/%s.tar.gz" % HEDRON_SHA,
     # When you first run this tool, it'll recommend a sha256 hash to put here with a message like: "DEBUG: Rule 'hedron_compile_commands' indicated that a canonical reproducible form can be obtained by modifying arguments sha256 = ..."
 )
 
