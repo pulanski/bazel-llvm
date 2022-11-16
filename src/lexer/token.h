@@ -1,25 +1,30 @@
-#ifndef __TOKEN_H__
-#define __TOKEN_H__
+#pragma once
 
 #include <string>
 
 using namespace std;
 
-// The lexer returns tokens [0-255] if it is an unknown character, otherwise one
-// of these for known things.
+/// The lexer returns tokens [0-255] if it is an unknown character, otherwise
+/// one of these for known things.
 enum Token {
+    /// End of file token.
     TokEof = -1,
 
-    // commands
+    /// "def" token.
     TokDef = -2,
+
+    /// "extern" token.
     TokExtern = -3,
 
-    // primary
+    // Identifier token (e.g. "foo").
     TokIdentifier = -4,
+
+    // Number token (e.g. "1.0").
     TokNumber = -5,
 };
 
-extern string identifierStr;  // Filled in if tok_identifier
-extern double numVal;         // Filled in if tok_number
+// Filled in if tok_identifier
+extern string identifierStr;
 
-#endif  // !__TOKEN_H__
+// Filled in if tok_number
+extern double numVal;

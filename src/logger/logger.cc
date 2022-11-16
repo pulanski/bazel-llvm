@@ -3,34 +3,47 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "fmt/color.h"
+
 using namespace std;
+using namespace fmt;
 
 void logError(const string& message) {
-    cout << set_colors(VT_BLACK, VT_RED) << " ERROR " << default_attributes
-         << " " << message << endl;
+    print(fg(color::black) | bg(color::crimson) | emphasis::bold, " ERROR ");
+    print(" {}\n", message);
 }
 
 void logWarning(const string& message) {
-    cout << set_colors(VT_BLACK, VT_YELLOW) << " WARNING " << default_attributes
-         << " " << message << endl;
+    print(fg(color::black) | bg(color::orange_red) | emphasis::bold,
+          " WARNING ");
+    print(" {}\n", message);
 }
 
 void logInfo(const string& message) {
-    cout << set_colors(VT_BLACK, VT_YELLOW) << " INFO " << default_attributes
-         << " " << message << endl;
+    print(fg(color::black) | bg(color::yellow) | emphasis::bold, " INFO ");
+    print(" {}\n", message);
 }
 
 unique_ptr<ExprAST> logSyntaxError(const string& message) {
-    logError("Syntax Error: " + message);
+    string syntax_error_message_header =
+        format(fg(color::aqua), "Syntax Error");
+    logError(format("{} {}", syntax_error_message_header, message));
     return nullptr;
 }
 
 unique_ptr<PrototypeAST> logPrototypeSyntaxError(const string& message) {
-    logError("Syntax Error (Prototype): " + message);
+    string syntax_error_message_header =
+        format(fg(color::aqua), "Syntax Error");
+    string syntax_error_type =
+        format(fg(color::light_yellow) | emphasis::italic, "Prototype");
+    logError(format("{} {} {}", syntax_error_message_header, syntax_error_type,
+                    message));
     return nullptr;
 }
 
 llvm::Value* logCodegenError(const string& message) {
-    logError("Codegen Error: " + message);
+    string codegen_error_message_header =
+        format(fg(color::magenta), "Codegen Error");
+    logError(format("{} {}", codegen_error_message_header, message));
     return nullptr;
 }

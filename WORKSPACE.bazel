@@ -8,6 +8,7 @@ workspace(
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 # GoogleTest
 GOOGLE_TEST_SHA = "eb70a6d4520f940956a6b3e37d205d92736bb104c6a1b2b9f82bfc41bd7a2b34"
@@ -28,6 +29,9 @@ GLOG_VERSION = "0.6.0"
 ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
 
 ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
+
+# Hedron
+HEDRON_SHA = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
 
 # Configure GoogleTest, a testing framework for C++ from Google
 # See https://github.com/google/googletest for more details.
@@ -65,6 +69,29 @@ http_archive(
     urls = ["https://github.com/abseil/abseil-cpp/archive/%s.zip" % ABSEIL_COMMIT],
 )
 
+# Configure fmt, a modern formatting library for C++
+# See https://github.com/fmtlib/fmt for more details.
+git_repository(
+    name = "fmt",
+    # branch = "master",
+    commit = "7df30f91aee5444a733cec0b911d21cebdeb62ae",
+    shallow_since = "1668405272 -0800",
+    patch_cmds = [
+        "mv support/bazel/.bazelrc .bazelrc",
+        "mv support/bazel/.bazelversion .bazelversion",
+        "mv support/bazel/BUILD.bazel BUILD.bazel",
+        "mv support/bazel/WORKSPACE.bazel WORKSPACE.bazel",
+    ],
+    # Windows related patch commands are only needed in the case MSYS2 is not installed
+    patch_cmds_win = [
+        "Move-Item -Path support/bazel/.bazelrc -Destination .bazelrc",
+        "Move-Item -Path support/bazel/.bazelversion -Destination .bazelversion",
+        "Move-Item -Path support/bazel/BUILD.bazel -Destination BUILD.bazel",
+        "Move-Item -Path support/bazel/WORKSPACE.bazel -Destination WORKSPACE.bazel",
+    ],
+    remote = "https://github.com/fmtlib/fmt",
+)
+
 # Configure LLVM, compiler middle/backend infrastructure
 load("//build_defs:llvm.bzl", "llvm")
 
@@ -73,10 +100,9 @@ llvm(
     workspace_name = WORKSPACE_NAME,
 )
 
-HEDRON_SHA = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
-
 # Hedron's Compile Commands Extractor for Bazel
-# https://github.com/hedronvision/bazel-compile-commands-extractor
+# See https://github.com/hedronvision/bazel-compile-commands-extractor for more details.
+# NOTE: I've been incredibly happy with this tool. It's been a huge help in getting IDE support for third-party libraries working when using Bazel
 http_archive(
     name = "hedron_compile_commands",
     strip_prefix = "bazel-compile-commands-extractor-%s" % HEDRON_SHA,

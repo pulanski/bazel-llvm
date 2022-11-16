@@ -1,11 +1,11 @@
 #include "variable_expr_ast.h"
 
 // We assume that the variable has already been emitted somewhere
-llvm::Value* VariableExprAST::codegen() {
-    llvm::Value* V = NamedValues[name_];
+Value* VariableExprAST::codegen() {
+    Value* V = symbolTable[name_];
 
     if (!V) {
-        logCodegenError("Unknown variable name");
+        logCodegenError("Unknown variable name " + name_);
     }
 
     return V;

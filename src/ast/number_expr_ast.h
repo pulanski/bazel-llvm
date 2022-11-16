@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../kaleidoscope/kaleidoscope.h"
 #include "expr_ast.h"
+#include "src/kaleidoscope/kaleidoscope.h"
 
 // Expression class for numeric literals like "1.0".
 class NumberExprAST : public ExprAST {
@@ -9,5 +9,5 @@ class NumberExprAST : public ExprAST {
 
    public:
     NumberExprAST(double val) : val_(val) {}
-    llvm::Value* codegen() override;
+    auto codegen() -> Value* override;
 };

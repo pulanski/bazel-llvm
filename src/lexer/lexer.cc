@@ -7,8 +7,6 @@
 
 #include "token.h"
 
-using namespace std;
-
 // CurTok is the current token the parser is looking at.
 int curTok;
 string identifierStr;

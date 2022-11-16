@@ -3,9 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "expr_ast.h"
+#include "llvm/IR/Function.h"
 
 using namespace std;
+using namespace llvm;
 
 // Class for representing function prototypes
 class PrototypeAST {
@@ -16,5 +17,7 @@ class PrototypeAST {
     PrototypeAST(const string& name, vector<string> args)
         : name_(name), args_(std::move(args)) {}
 
-    const string& getName() { return name_; }
+    auto getName() -> const string& { return name_; }
+
+    auto codegen() -> Function*;
 };

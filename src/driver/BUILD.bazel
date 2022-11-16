@@ -3,14 +3,12 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "logger",
-    srcs = ["logger.cc"],
+    name = "driver",
+    srcs = ["driver.cc"],
     hdrs = [
-        "logger.h",
+        "driver.h"
     ],
     deps = [
-        "//src/ast:expr_ast",
-        "//src/ast:prototype_ast",
-        "@fmt",
+        "//src/parser",
     ],
 )

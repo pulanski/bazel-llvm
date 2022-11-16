@@ -1,13 +1,12 @@
 #include "parser.h"
 
+#include <cstdio>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "../logger/logger.h"
-
-using namespace std;
+#include "src/logger/logger.h"
 
 map<char, int> binOpPrecedence;
 
@@ -25,14 +24,12 @@ int getTokenPrecedence() {
     return tokPrec;
 }
 
-/// numberexpr ::= number
 unique_ptr<ExprAST> parseNumberExpr() {
     auto number = make_unique<NumberExprAST>(numVal);
     getNextToken();  // consume the number
     return std::move(number);
 }
 
-/// parenexpr ::= '(' expression ')'
 unique_ptr<ExprAST> parseParenExpr() {
     getNextToken();  // skip `(`
     auto expr = parseExpression();
@@ -49,9 +46,6 @@ unique_ptr<ExprAST> parseParenExpr() {
     return expr;
 }
 
-/// identifierexpr
-///   ::= identifier
-///   ::= identifier '(' expression* ')'
 unique_ptr<ExprAST> parseIdentifierExpr() {
     string idName = identifierStr;
 
@@ -92,27 +86,21 @@ unique_ptr<ExprAST> parseIdentifierExpr() {
     return make_unique<CallExprAST>(idName, std::move(args));
 }
 
-/// primary
-///   ::= identifierexpr
-///   ::= numberexpr
-///   ::= parenexpr
 unique_ptr<ExprAST> parsePrimary() {
     switch (curTok) {
-        default:
-            return logSyntaxError(
-                "Expected an expression, but found unknown token `" +
-                to_string(curTok) + "`.");
         case TokIdentifier:
             return parseIdentifierExpr();
         case TokNumber:
             return parseNumberExpr();
         case '(':
             return parseParenExpr();
+        default:
+            return logSyntaxError(
+                "Expected an expression, but found unknown token '" +
+                to_string(curTok) + "'.");
     }
 }
 
-/// binoprhs
-///   ::= ('+' primary)*
 unique_ptr<ExprAST> parseBinOpRHS(int expr_precedence,
                                   unique_ptr<ExprAST> lhs) {
     // If this is a binop, find its precedence.
@@ -151,8 +139,6 @@ unique_ptr<ExprAST> parseBinOpRHS(int expr_precedence,
     }
 }
 
-/// expression
-///   ::= primary binoprhs
 unique_ptr<ExprAST> parseExpression() {
     auto lhs = parsePrimary();
 
@@ -168,8 +154,8 @@ unique_ptr<ExprAST> parseExpression() {
 unique_ptr<PrototypeAST> parsePrototype() {
     if (curTok != TokIdentifier) {
         logPrototypeSyntaxError(
-            "Expected function name in prototype, but instead found token, `" +
-            to_string(curTok) + "`.");
+            "Expected function name in prototype, but instead found token, '" +
+            to_string(curTok) + "'.");
     }
 
     string fnName = identifierStr;
@@ -224,36 +210,4 @@ unique_ptr<PrototypeAST> parseExtern() {
     getNextToken();  // eat `extern`
 
     return parsePrototype();
-}
-
-///////////////////////
-// Top-level Parsing //
-///////////////////////
-
-void handleDefinition() {
-    if (parseDefinition()) {
-        logInfo("Successfully parsed a function definition.");
-    } else {
-        // Skip the token for error recovery
-        getNextToken();
-    }
-}
-
-void handleExtern() {
-    if (parseExtern()) {
-        logInfo("Successfully parsed an extern.");
-    } else {
-        // Skip the token for error recovery
-        getNextToken();
-    }
-}
-
-void handleTopLevelExpression() {
-    // Evaluate a top-level expression into an anonymous function.
-    if (parseTopLevelExpr()) {
-        logInfo("Successfully parsed a top level expression.");
-    } else {
-        // Skip the token for error recovery
-        getNextToken();
-    }
 }
