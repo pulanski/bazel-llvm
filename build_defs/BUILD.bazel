@@ -1,3 +1,0 @@
-# Grants visibility to the workspace root,
-# but not to any subpackages.
-package(default_visibility = ["//:__pkg__"])

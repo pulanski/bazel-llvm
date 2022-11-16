@@ -93,16 +93,26 @@ git_repository(
 )
 
 # Configure LLVM, compiler middle/backend infrastructure
-load("//build_defs:llvm.bzl", "llvm")
+load("//:third_party/llvm.bzl", "llvm")
 
 llvm(
     name = "llvm",
     workspace_name = WORKSPACE_NAME,
 )
 
+load("//:third_party/llvm_transitive_deps.bzl", "llvm_transitive_deps")
+
+# Load in third party dependencies required for compilation
+# These currently include zlib and zstd which are transitive dependencies
+# of LLVM used for compression during optimization passes.
+# These dependencies are defined within the third_party directory
+# within the repo root.
+llvm_transitive_deps()
+
 # Hedron's Compile Commands Extractor for Bazel
 # See https://github.com/hedronvision/bazel-compile-commands-extractor for more details.
-# NOTE: I've been incredibly happy with this tool. It's been a huge help in getting IDE support for third-party libraries working when using Bazel
+# NOTE: I've been incredibly happy with this tool. It's been a huge help in getting
+# IDE support for third-party libraries working when using Bazel
 http_archive(
     name = "hedron_compile_commands",
     strip_prefix = "bazel-compile-commands-extractor-%s" % HEDRON_SHA,

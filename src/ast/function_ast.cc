@@ -2,6 +2,7 @@
 
 #include "src/kaleidoscope/kaleidoscope.h"
 #include "src/logger/logger.h"
+#include "src/passes/pass_manager.h"
 
 Function* FunctionAST::codegen() {
     // First, check for an existing function from a previous 'extern'
@@ -37,6 +38,9 @@ Function* FunctionAST::codegen() {
 
         // Validate the generated code, checking for consistency.
         verifyFunction(*fn);
+
+        // Optimize the function.
+        TheFPM->run(*fn);
 
         return fn;
     }

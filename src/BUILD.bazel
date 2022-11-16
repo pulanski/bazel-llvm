@@ -8,8 +8,11 @@ cc_binary(
         "//src/lexer",
         "//src/logger",
         "//src/parser",
+        "//src/passes:pass_manager",
         "@com_google_absl//absl/strings",
         "@com_google_glog//:glog",
         "@fmt",
+        "@zlib",
+        "@zstd//:zstd_lib",
     ],
 )

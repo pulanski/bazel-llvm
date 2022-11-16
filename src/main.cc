@@ -13,6 +13,7 @@
 #include "lexer/token.h"
 #include "logger/logger.h"
 #include "parser/parser.h"
+#include "passes/pass_manager.h"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "ready> ");
     getNextToken();
 
-    initializeModule();
+    initializeModuleAndPassManager();
 
     // Run the main "interpreter loop" now.
     mainLoop();
