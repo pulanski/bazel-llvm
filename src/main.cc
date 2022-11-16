@@ -8,37 +8,13 @@
 #include <vector>
 
 // #include "absl/strings/str_join.h"
+#include "driver/driver.h"
 #include "lexer/lexer.h"
 #include "lexer/token.h"
 #include "logger/logger.h"
 #include "parser/parser.h"
 
 using namespace std;
-
-/// top ::= definition | external | expression | ';'
-static void mainLoop() {
-    while (true) {
-        fprintf(stderr, "ready> ");
-        switch (curTok) {
-            case TokEof:
-                return;
-            case ';':  // ignore top-level semicolons.
-                getNextToken();
-                break;
-            case TokDef:
-                handleDefinition();
-                break;
-            case TokExtern:
-                handleExtern();
-                break;
-            default:
-                handleTopLevelExpression();
-                break;
-        }
-    }
-
-    LOG(INFO) << "exited";
-}
 
 // Main driver code.
 int main(int argc, char* argv[]) {
@@ -57,8 +33,13 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "ready> ");
     getNextToken();
 
+    initializeModule();
+
     // Run the main "interpreter loop" now.
     mainLoop();
+
+    // Print out all of the generated code.
+    TheModule->print(errs(), nullptr);
 
     return 0;
 }

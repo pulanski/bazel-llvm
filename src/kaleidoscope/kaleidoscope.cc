@@ -1,17 +1,16 @@
 #include "kaleidoscope.h"
 
-#include <string>
-
-using namespace std;
+#include <memory>
 
 // This is an object that owns LLVM core data structures
-llvm::LLVMContext TheContext;
+
+unique_ptr<LLVMContext> TheContext;
 
 // This is a helper object that makes easy to generate LLVM instructions
-llvm::IRBuilder<> Builder(TheContext);
+unique_ptr<IRBuilder<>> Builder;
 
 // This is an LLVM construct that contains functions and global variables
-unique_ptr<llvm::Module> TheModule;
+unique_ptr<Module> TheModule;
 
 // This map keeps track of which values are defined in the current scope
-map<string, llvm::Value*> NamedValues;
+map<string, Value*> symbolTable;

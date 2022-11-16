@@ -4,10 +4,12 @@ cc_binary(
     name = "main",
     srcs = ["main.cc"],
     deps = [
+        "//src/driver",
         "//src/lexer",
         "//src/logger",
         "//src/parser",
         "@com_google_absl//absl/strings",
         "@com_google_glog//:glog",
+        "@fmt",
     ],
 )

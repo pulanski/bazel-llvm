@@ -14,14 +14,17 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
 
+using namespace std;
+using namespace llvm;
+
 // This is an object that owns LLVM core data structures
-extern llvm::LLVMContext TheContext;
+extern unique_ptr<LLVMContext> TheContext;
 
 // This is a helper object that makes easy to generate LLVM instructions
-extern llvm::IRBuilder<> Builder;
+extern unique_ptr<IRBuilder<>> Builder;
 
 // This is an LLVM construct that contains functions and global variables
-extern std::unique_ptr<llvm::Module> TheModule;
+extern unique_ptr<Module> TheModule;
 
 // This map keeps track of which values are defined in the current scope
-extern std::map<std::string, llvm::Value*> NamedValues;
+extern map<string, Value*> symbolTable;

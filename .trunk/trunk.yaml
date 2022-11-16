@@ -9,11 +9,10 @@ plugins:
 lint:
     enabled:
         - actionlint@1.6.22
-        - clang-tidy@14.0.0
+        # - clang-tidy@14.0.0
         - buildifier@5.1.0
         - git-diff-check
         - gitleaks@8.15.0
-        # - clang-tidy@14.0.0
         - prettier@2.7.1
         - clang-format@14.0.0
 runtimes:
