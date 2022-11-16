@@ -12,6 +12,5 @@ void handleExtern();
 /// and generating LLVM IR from the parsed AST node
 void handleTopLevelExpression();
 
+/// Main loop for the driver
 void mainLoop();
-
-void initializeModule();

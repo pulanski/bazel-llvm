@@ -31,18 +31,6 @@ void mainLoop() {
     }
 }
 
-/// Handles the initialization of an LLVM Module
-/// used as a container for LLVM IR objects
-void initializeModule() {
-    // Open a new context and module
-    TheContext = make_unique<LLVMContext>();
-    TheModule =
-        make_unique<Module>("JIT Adventures with Bazel and LLVM", *TheContext);
-
-    // Create a new builder for the module
-    Builder = make_unique<IRBuilder<>>(*TheContext);
-}
-
 //////////////////////////////////////
 // Top-level Parsing and JIT Driver //
 //////////////////////////////////////

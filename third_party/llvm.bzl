@@ -1,18 +1,20 @@
 """Build definitions for LLVM"""
 
+LLVM_VERSION = "15.0.4"
+OS_ARCH = "arm64-apple-darwin21.0"
+
 def _impl(ctx):
-    """Implementation of the llvm() rule
-    Downloads and extracts the pre-built LLVM binaries and compiles them into a cc_library().
-    Currently always uses the 64-bit Ubuntu 16.04 version, could probably update this to be multiplatform.
+    """
+    Implementation of the llvm() rule. Downloads and extracts the pre-built LLVM binaries and compiles them into a cc_library().
     """
 
     # Download the pre-built LLVM binaries.
     version = ctx.attr.version
-    # name = "clang+llvm-%s-x86_64-linux-gnu-ubuntu-16.04" % version
-    name = "clang+llvm-%s-arm64-apple-darwin21.0" % version
+    name = "clang+llvm-%s-%s" % (version, OS_ARCH)
+
     # https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.4/clang+llvm-15.0.4-arm64-apple-darwin21.0.tar.xz
     ctx.download_and_extract(
-        # url = "https://releases.llvm.org/%s/%s.tar.xz" % (version, name),
+        # url = "https://releases.llvm.org/%s/%s.tar.xz" % (version, name), <- old releases hosting location
         url = "https://github.com/llvm/llvm-project/releases/download/llvmorg-%s/%s.tar.xz" % (version, name),
     )
 
@@ -95,7 +97,7 @@ llvm = repository_rule(
     implementation = _impl,
     attrs = {
         # The version of LLVM to download.
-        "version": attr.string(default = "15.0.4"),
+        "version": attr.string(default = LLVM_VERSION),
         # The name of the workspace() this is being included in.
         "workspace_name": attr.string(mandatory = True),
     },

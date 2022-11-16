@@ -47,6 +47,7 @@ cc_library(
         ":expr_ast",
         ":prototype_ast",
         "//src/logger",
+        "//src/passes:pass_manager",
     ],
 )
 
