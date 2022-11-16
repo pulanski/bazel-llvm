@@ -7,8 +7,8 @@ workspace(
     name = WORKSPACE_NAME,
 )
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # GoogleTest
 GOOGLE_TEST_SHA = "eb70a6d4520f940956a6b3e37d205d92736bb104c6a1b2b9f82bfc41bd7a2b34"
@@ -75,7 +75,6 @@ git_repository(
     name = "fmt",
     # branch = "master",
     commit = "7df30f91aee5444a733cec0b911d21cebdeb62ae",
-    shallow_since = "1668405272 -0800",
     patch_cmds = [
         "mv support/bazel/.bazelrc .bazelrc",
         "mv support/bazel/.bazelversion .bazelversion",
@@ -90,6 +89,7 @@ git_repository(
         "Move-Item -Path support/bazel/WORKSPACE.bazel -Destination WORKSPACE.bazel",
     ],
     remote = "https://github.com/fmtlib/fmt",
+    shallow_since = "1668405272 -0800",
 )
 
 # Configure LLVM, compiler middle/backend infrastructure

@@ -6,7 +6,7 @@ cc_library(
     name = "driver",
     srcs = ["driver.cc"],
     hdrs = [
-        "driver.h"
+        "driver.h",
     ],
     deps = [
         "//src/parser",

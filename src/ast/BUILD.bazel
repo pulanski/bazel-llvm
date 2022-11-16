@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "expr_ast",
     hdrs = [
-        "expr_ast.h"
+        "expr_ast.h",
     ],
     deps = ["@llvm"],
 )
@@ -17,10 +17,10 @@ cc_library(
         "binary_expr_ast.h",
     ],
     deps = [
+        ":expr_ast",
         "//src/kaleidoscope",
         "//src/logger",
-        ":expr_ast",
-    ]
+    ],
 )
 
 cc_library(
@@ -30,11 +30,11 @@ cc_library(
         "call_expr_ast.h",
     ],
     deps = [
-        "@llvm",
+        ":expr_ast",
         "//src/kaleidoscope",
         "//src/logger",
-        ":expr_ast",
-    ]
+        "@llvm",
+    ],
 )
 
 cc_library(
@@ -44,10 +44,10 @@ cc_library(
         "function_ast.h",
     ],
     deps = [
-        "//src/logger",
         ":expr_ast",
         ":prototype_ast",
-    ]
+        "//src/logger",
+    ],
 )
 
 cc_library(
@@ -57,9 +57,9 @@ cc_library(
         "number_expr_ast.h",
     ],
     deps = [
-        "//src/kaleidoscope",
         ":expr_ast",
-    ]
+        "//src/kaleidoscope",
+    ],
 )
 
 cc_library(
@@ -71,7 +71,7 @@ cc_library(
     deps = [
         "//src/kaleidoscope",
         "@llvm",
-    ]
+    ],
 )
 
 cc_library(
@@ -81,8 +81,8 @@ cc_library(
         "variable_expr_ast.h",
     ],
     deps = [
+        ":expr_ast",
         "//src/kaleidoscope",
         "//src/logger",
-        ":expr_ast",
-    ]
+    ],
 )
