@@ -7,6 +7,9 @@ test --disk_cache=~/.cache/bazel-disk
 # Bazel doesn't have a native understanding of C++ versions. This was
 # added for Java in 2021; hopefully it might arrive for C++ someday.
 
+build --action_env=CC=clang
+build --action_env=CXX=clang++
+
 build --enable_platform_specific_config
 # linux, macos, windows, freebsd, and openbsd.
 
