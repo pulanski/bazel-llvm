@@ -1,0 +1,16 @@
+steps:
+    - group: ":buildkite: :mac: :coverage: Static Analysis"
+      key: "static-analysis"
+      steps:
+          - label: ":testobject: cppcheck"
+            command: "cppcheck src/"
+          - label: ":cmake: clang-format"
+            command: "fd --extension cc --extension h --exec clang-format -style=Google"
+          - label: ":repolinter: trunk check"
+            command: "trunk check"
+    - label: ":buildkite: :bazel: :mac: bazel build //..."
+      command: "bazel build //..."
+    - label: ":buildkite: :bazel: :mac: :test_tube: bazel test //..."
+      command: "bazel test //..."
+notify:
+    - email: "joshuakersey50+ci@gmail.com"

@@ -1,8 +1,7 @@
 {
-  "watch": [
-    "src/",
-    "greeting/",
-    "./"
-  ],
-  "ext": "h,cc,bazel,json"
+  "watch": ["./"],
+  "events": {
+    "start": "clear"
+  },
+  "ext": "h,cc,bazel,bzl"
 }
