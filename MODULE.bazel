@@ -1,17 +1,25 @@
 module(
     name = "bazel-llvm",
     version = "0.1.0",
-    authors = "pulanski",
-    description = "Compiler experiment built with C++, LLVM, and Bazel",
-    compatibility_level = "1",
-    bazel_compatibility = ">=5.3.2",
+    # authors = "pulanski",
+    # description = "Compiler experiment built with C++, LLVM, and Bazel",
+    compatibility_level = 1,
+    # bazel_compatibility = ">=5.3.2",
 )
 
 bazel_dep(name = "apple_rules_lint", version = "0.3.2")
-bazel_dep(name = "stardoc", version = "0.5.3")
+
+linter = use_extension("@apple_rules_lint//lint:extensions.bzl", "linter")
+linter.configure(name = "clang-tidy", config = "//.clang-tidy")
+
+bazel_dep(name = "bazel_skylib", version = "1.3.0")
+bazel_dep(name = "stardoc", version = "0.5.3", repo_name = "io_bazel_stardoc")
 bazel_dep(name = "aspect_bazel_lib", version = "1.16.1")
 bazel_dep(name = "rules_cc", version = "0.0.2")
-bazel_dep(name = "abseil-cpp", version = "20211102.0")
-bazel_dep(name = "googletest", version = "1.11.0")
-bazel_dep(name = "fmt", version = "8.1.1")
-bazel_dep(name = "bazel_skylib", version = "1.3.0")
+bazel_dep(name = "abseil-cpp", version = "20211102.0", repo_name = "com_google_absl")
+bazel_dep(name = "googletest", version = "1.11.0", repo_name = "com_google_googletest")
+bazel_dep(name = "glog", version = "0.5.0", repo_name = "com_google_glog")
+bazel_dep(name = "gflags", version = "2.2.2", repo_name = "com_gflags_gflags")
+bazel_dep(name = "fmt", version = "8.1.1", repo_name = "com_fmtlib_fmt")
+bazel_dep(name = "zlib", version = "1.2.13", repo_name = "com_madler_zlib")
+bazel_dep(name = "rules_python", version = "0.12.0")
