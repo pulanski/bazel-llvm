@@ -11,7 +11,7 @@ cc_binary(
         "//src/passes:pass_manager",
         "@com_google_absl//absl/strings",
         "@com_google_glog//:glog",
-        "@fmt",
+        "@com_fmtlib_fmt//:fmt",
         "@zlib",
         "@zstd//:zstd_lib",
     ],

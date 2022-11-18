@@ -30,8 +30,16 @@ ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
 
 ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
 
+# Fmt
+FMT_COMMIT = "7df30f91aee5444a733cec0b911d21cebdeb62ae"
+
 # Hedron
 HEDRON_SHA = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
+
+# Buildbuddy
+BUILD_BUDDY_SHA = "a2a5cccec251211e2221b1587af2ce43c36d32a42f5d881737db3b546a536510"
+
+BUILD_BUDDY_COMMIT = "829c8a574f706de5c96c54ca310f139f4acda7dd"
 
 # Configure GoogleTest, a testing framework for C++ from Google
 # See https://github.com/google/googletest for more details.
@@ -72,15 +80,15 @@ http_archive(
 # Configure fmt, a modern formatting library for C++
 # See https://github.com/fmtlib/fmt for more details.
 git_repository(
-    name = "fmt",
-    # branch = "master",
-    commit = "7df30f91aee5444a733cec0b911d21cebdeb62ae",
+    name = "com_fmtlib_fmt",
+    commit = FMT_COMMIT,
     patch_cmds = [
         "mv support/bazel/.bazelrc .bazelrc",
         "mv support/bazel/.bazelversion .bazelversion",
         "mv support/bazel/BUILD.bazel BUILD.bazel",
         "mv support/bazel/WORKSPACE.bazel WORKSPACE.bazel",
     ],
+
     # Windows related patch commands are only needed in the case MSYS2 is not installed
     patch_cmds_win = [
         "Move-Item -Path support/bazel/.bazelrc -Destination .bazelrc",
@@ -92,6 +100,15 @@ git_repository(
     shallow_since = "1668405272 -0800",
 )
 
+load("//:third_party/llvm_transitive_deps.bzl", "llvm_transitive_deps")
+
+# Load in third party dependencies required for compilation
+# These currently include zlib and zstd which are transitive dependencies
+# of LLVM used for compression during optimization passes.
+# These dependencies are defined within the third_party directory
+# within the repo root. This may be expanded on in the future as needed.
+llvm_transitive_deps()
+
 # Configure LLVM, compiler middle/backend infrastructure
 load("//:third_party/llvm.bzl", "llvm")
 
@@ -100,19 +117,11 @@ llvm(
     workspace_name = WORKSPACE_NAME,
 )
 
-load("//:third_party/llvm_transitive_deps.bzl", "llvm_transitive_deps")
-
-# Load in third party dependencies required for compilation
-# These currently include zlib and zstd which are transitive dependencies
-# of LLVM used for compression during optimization passes.
-# These dependencies are defined within the third_party directory
-# within the repo root.
-llvm_transitive_deps()
-
 # Hedron's Compile Commands Extractor for Bazel
 # See https://github.com/hedronvision/bazel-compile-commands-extractor for more details.
 # NOTE: I've been incredibly happy with this tool. It's been a huge help in getting
-# IDE support for third-party libraries working when using Bazel
+# IDE support for third-party libraries working when using Bazel w/ C family languages,
+# primarly C++
 http_archive(
     name = "hedron_compile_commands",
     strip_prefix = "bazel-compile-commands-extractor-%s" % HEDRON_SHA,
@@ -126,3 +135,18 @@ http_archive(
 load("@hedron_compile_commands//:workspace_setup.bzl", "hedron_compile_commands_setup")
 
 hedron_compile_commands_setup()
+
+http_archive(
+    name = "io_buildbuddy_buildbuddy_toolchain",
+    sha256 = BUILD_BUDDY_SHA,
+    strip_prefix = "buildbuddy-toolchain-%s" % BUILD_BUDDY_COMMIT,
+    urls = ["https://github.com/buildbuddy-io/buildbuddy-toolchain/archive/%s.tar.gz" % BUILD_BUDDY_COMMIT],
+)
+
+load("@io_buildbuddy_buildbuddy_toolchain//:deps.bzl", "buildbuddy_deps")
+
+buildbuddy_deps()
+
+load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy")
+
+buildbuddy(name = "buildbuddy_toolchain")

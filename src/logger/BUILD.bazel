@@ -11,6 +11,6 @@ cc_library(
     deps = [
         "//src/ast:expr_ast",
         "//src/ast:prototype_ast",
-        "@fmt",
+        "@com_fmtlib_fmt//:fmt",
     ],
 )
