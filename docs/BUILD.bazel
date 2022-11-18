@@ -1,0 +1,10 @@
+load("@aspect_bazel_lib//lib:docs.bzl", "stardoc_with_diff_test", "update_docs")
+
+package(default_visibility = ["//visibility:public"])
+
+stardoc_with_diff_test(
+    name = "llvm",
+    bzl_library_target = "//third_party:llvm",
+)
+
+update_docs(name = "update_docs")

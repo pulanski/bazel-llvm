@@ -7,100 +7,98 @@ workspace(
     name = WORKSPACE_NAME,
 )
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# GoogleTest
-GOOGLE_TEST_SHA = "eb70a6d4520f940956a6b3e37d205d92736bb104c6a1b2b9f82bfc41bd7a2b34"
-
-GOOGLE_TEST_COMMIT = "28e1da21d8d677bc98f12ccc7fc159ff19e8e817"
-
-# Gflags
-GFLAGS_SHA = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf"
-
-GFLAGS_VERSION = "2.2.2"
-
-# Glog
-GLOG_SHA = "122fb6b712808ef43fbf80f75c52a21c9760683dae470154f02bddfc61135022"
-
-GLOG_VERSION = "0.6.0"
-
-# Abseil
-ABSEIL_SHA = "8400c511d64eb4d26f92c5ec72535ebd0f843067515244e8b50817b0786427f9"
-
-ABSEIL_COMMIT = "c512f118dde6ffd51cb7d8ac8804bbaf4d266c3a"
-
-# Fmt
-FMT_COMMIT = "7df30f91aee5444a733cec0b911d21cebdeb62ae"
-
 # Hedron
-HEDRON_SHA = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
+HEDRON_SHA = "b0a8af42e06108ec62382703daf27f7d8d247fd1b930f249045c70cd9d22f72e"
+
+HEDRON_COMMIT = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
 
 # Buildbuddy
 BUILD_BUDDY_SHA = "a2a5cccec251211e2221b1587af2ce43c36d32a42f5d881737db3b546a536510"
 
 BUILD_BUDDY_COMMIT = "829c8a574f706de5c96c54ca310f139f4acda7dd"
 
-# Configure GoogleTest, a testing framework for C++ from Google
-# See https://github.com/google/googletest for more details.
+# Go
+RULES_GO_SHA = "27b77fd0d6d704da1a37ac56428a68ecd2f54cfcea5a6bae4bc876564f37fb95"
+
+RULES_GO_VERSION = "cd9a99a102c3599babe6d8aebaa568961370541c"
+
+GO_VERSION = "1.19.1"
+
+# Gazelle
+GAZELLE_SHA = "fdfa7f0969e997d26378dd283fab89379403bd4379051da81f7268d5c04398f7"
+
+GAZELLE_COMMIT = "06b821c9b085f3d7c21af06a33a990513351431c"
+
+# Buildtools (buildifier, buildozer, unused_deps)
+# BUILD_TOOLS_SHA =
+#
+# BUILD_TOOLS_COMMIT =
+
+# Configure a Go toolchain.
+# See https://github.com/bazelbuild/rules_go for more details.
 http_archive(
-    name = "com_google_googletest",
-    sha256 = GOOGLE_TEST_SHA,
-    strip_prefix = "googletest-%s" % GOOGLE_TEST_COMMIT,
-    urls = ["https://github.com/google/googletest/archive/%s.zip" % GOOGLE_TEST_COMMIT],
+    name = "io_bazel_rules_go",
+    sha256 = RULES_GO_SHA,
+    strip_prefix = "rules_go-%s" % RULES_GO_VERSION,
+    urls = ["https://github.com/bazelbuild/rules_go/archive/%s.tar.gz" % RULES_GO_VERSION],
 )
 
-# Configure gflags, a library for command line flag parsing in C++
-# See https://github.com/gflags/gflags for more details.
+load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+
+go_rules_dependencies()
+
+go_register_toolchains(version = GO_VERSION)
+
+# Bring in Gazelle, a build file generator for Bazel.
+# Gazelle can be used to generate BUILD files for the following languages.
+#
+# - Go
+# - Java
+# - Haskell
+# - JavaScript
+# - TypeScript
+# - Protobuf
+# - Python
+# - Starlark
+#
+# See https://github.com/bazelbuild/bazel-gazelle for more details.
 http_archive(
-    name = "com_github_gflags_gflags",
-    sha256 = GFLAGS_SHA,
-    strip_prefix = "gflags-%s" % GFLAGS_VERSION,
-    urls = ["https://github.com/gflags/gflags/archive/v%s.tar.gz" % GFLAGS_VERSION],
+    name = "bazel_gazelle",
+    sha256 = GAZELLE_SHA,
+    strip_prefix = "bazel-gazelle-%s" % GAZELLE_COMMIT,
+    urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/%s.tar.gz" % GAZELLE_COMMIT],
 )
 
-# Configure Glog, a logging framework for C++ from Google
-# See https://github.com/google/glog for more details.
-http_archive(
-    name = "com_google_glog",
-    sha256 = GLOG_SHA,
-    strip_prefix = "glog-%s" % GLOG_VERSION,
-    urls = ["https://github.com/google/glog/archive/v%s.zip" % GLOG_VERSION],
-)
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
-# Configure Abseil, core C++ libraries from Google
-# See https://github.com/abseil/abseil-cpp for more details.
-http_archive(
-    name = "com_google_absl",
-    sha256 = ABSEIL_SHA,
-    strip_prefix = "abseil-cpp-%s" % ABSEIL_COMMIT,
-    urls = ["https://github.com/abseil/abseil-cpp/archive/%s.zip" % ABSEIL_COMMIT],
-)
+gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
+# gazelle_dependencies(go_repository_default_config = "@//:WORKSPACE.bazel")
 
-# Configure fmt, a modern formatting library for C++
-# See https://github.com/fmtlib/fmt for more details.
-git_repository(
-    name = "com_fmtlib_fmt",
-    commit = FMT_COMMIT,
-    patch_cmds = [
-        "mv support/bazel/.bazelrc .bazelrc",
-        "mv support/bazel/.bazelversion .bazelversion",
-        "mv support/bazel/BUILD.bazel BUILD.bazel",
-        "mv support/bazel/WORKSPACE.bazel WORKSPACE.bazel",
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "3bd7828aa5af4b13b99c191e8b1e884ebfa9ad371b0ce264605d347f135d2568",
+    strip_prefix = "protobuf-3.19.4",
+    urls = [
+        "https://github.com/protocolbuffers/protobuf/archive/v3.19.4.tar.gz",
     ],
-
-    # Windows related patch commands are only needed in the case MSYS2 is not installed
-    patch_cmds_win = [
-        "Move-Item -Path support/bazel/.bazelrc -Destination .bazelrc",
-        "Move-Item -Path support/bazel/.bazelversion -Destination .bazelversion",
-        "Move-Item -Path support/bazel/BUILD.bazel -Destination BUILD.bazel",
-        "Move-Item -Path support/bazel/WORKSPACE.bazel -Destination WORKSPACE.bazel",
-    ],
-    remote = "https://github.com/fmtlib/fmt",
-    shallow_since = "1668405272 -0800",
 )
 
-load("//:third_party/llvm_transitive_deps.bzl", "llvm_transitive_deps")
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+http_archive(
+    name = "com_github_bazelbuild_buildtools",
+    sha256 = "ae34c344514e08c23e90da0e2d6cb700fcd28e80c02e23e4d5715dddcb42f7b3",
+    strip_prefix = "buildtools-4.2.2",
+    urls = [
+        "https://github.com/bazelbuild/buildtools/archive/refs/tags/4.2.2.tar.gz",
+    ],
+)
+
+load("//third_party:llvm_transitive_deps.bzl", "llvm_transitive_deps")
 
 # Load in third party dependencies required for compilation
 # These currently include zlib and zstd which are transitive dependencies
@@ -110,7 +108,7 @@ load("//:third_party/llvm_transitive_deps.bzl", "llvm_transitive_deps")
 llvm_transitive_deps()
 
 # Configure LLVM, compiler middle/backend infrastructure
-load("//:third_party/llvm.bzl", "llvm")
+load("//third_party:llvm.bzl", "llvm")
 
 llvm(
     name = "llvm",
@@ -124,12 +122,9 @@ llvm(
 # primarly C++
 http_archive(
     name = "hedron_compile_commands",
-    strip_prefix = "bazel-compile-commands-extractor-%s" % HEDRON_SHA,
-
-    # Replace the commit hash in both places (below) with the latest, rather than using the stale one here.
-    # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
-    url = "https://github.com/hedronvision/bazel-compile-commands-extractor/archive/%s.tar.gz" % HEDRON_SHA,
-    # When you first run this tool, it'll recommend a sha256 hash to put here with a message like: "DEBUG: Rule 'hedron_compile_commands' indicated that a canonical reproducible form can be obtained by modifying arguments sha256 = ..."
+    sha256 = HEDRON_SHA,
+    strip_prefix = "bazel-compile-commands-extractor-%s" % HEDRON_COMMIT,
+    url = "https://github.com/hedronvision/bazel-compile-commands-extractor/archive/%s.tar.gz" % HEDRON_COMMIT,
 )
 
 load("@hedron_compile_commands//:workspace_setup.bzl", "hedron_compile_commands_setup")

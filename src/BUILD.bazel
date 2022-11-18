@@ -9,10 +9,10 @@ cc_binary(
         "//src/logger",
         "//src/parser",
         "//src/passes:pass_manager",
+        "@com_fmtlib_fmt//:fmt",
         "@com_google_absl//absl/strings",
         "@com_google_glog//:glog",
-        "@com_fmtlib_fmt//:fmt",
-        "@zlib",
+        "@com_madler_zlib//:zlib",
         "@zstd//:zstd_lib",
     ],
 )
