@@ -7,6 +7,7 @@ workspace(
     name = WORKSPACE_NAME,
 )
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Hedron
@@ -48,67 +49,19 @@ PYTHON_VERSION = "3.9.10"
 #
 # BUILD_TOOLS_COMMIT =
 
-# Configure a Go toolchain.
-# See https://github.com/bazelbuild/rules_go for more details.
-# http_archive(
-#     name = "io_bazel_rules_go",
-#     sha256 = RULES_GO_SHA,
-#     strip_prefix = "rules_go-%s" % RULES_GO_VERSION,
-#     urls = ["https://github.com/bazelbuild/rules_go/archive/%s.tar.gz" % RULES_GO_VERSION],
-# )
+new_git_repository(
+    name = "com_github_emirpasic_gods",
+    build_file = "third_party/gods.BUILD",
+    remote = "https://github.com/emirpasic/gods.git",
+    tag = "v1.18.1",
+)
 
-# load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
-
-# go_rules_dependencies()
-
-# go_register_toolchains(version = GO_VERSION)
-
-# Bring in Gazelle, a build file generator for Bazel.
-# Gazelle can be used to generate BUILD files for the following languages.
-#
-# - Go
-# - Java
-# - Haskell
-# - JavaScript
-# - TypeScript
-# - Protobuf
-# - Python
-# - Starlark
-#
-# See https://github.com/bazelbuild/bazel-gazelle for more details.
-# http_archive(
-#     name = "bazel_gazelle",
-#     sha256 = GAZELLE_SHA,
-#     strip_prefix = "bazel-gazelle-%s" % GAZELLE_COMMIT,
-#     urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/%s.tar.gz" % GAZELLE_COMMIT],
-# )
-
-# load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-
-# gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
-# gazelle_dependencies(go_repository_default_config = "@//:WORKSPACE.bazel")
-
-# http_archive(
-#     name = "com_google_protobuf",
-#     sha256 = "3bd7828aa5af4b13b99c191e8b1e884ebfa9ad371b0ce264605d347f135d2568",
-#     strip_prefix = "protobuf-3.19.4",
-#     urls = [
-#         "https://github.com/protocolbuffers/protobuf/archive/v3.19.4.tar.gz",
-#     ],
-# )
-
-# load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
-
-# protobuf_deps()
-
-# http_archive(
-#     name = "com_github_bazelbuild_buildtools",
-#     sha256 = "ae34c344514e08c23e90da0e2d6cb700fcd28e80c02e23e4d5715dddcb42f7b3",
-#     strip_prefix = "buildtools-4.2.2",
-#     urls = [
-#         "https://github.com/bazelbuild/buildtools/archive/refs/tags/4.2.2.tar.gz",
-#     ],
-# )
+new_git_repository(
+    name = "in_gopkg_yaml_v2",
+    build_file = "third_party/go_yaml.BUILD",
+    remote = "https://github.com/go-yaml/yaml.git",
+    tag = "v3.0.1",
+)
 
 # Configure a Python toolchain.
 # See https://github.com/bazelbuild/rules_python for more details.
