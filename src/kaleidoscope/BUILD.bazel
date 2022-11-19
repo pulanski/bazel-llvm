@@ -6,7 +6,7 @@ cc_library(
     name = "kaleidoscope",
     srcs = ["kaleidoscope.cc"],
     hdrs = [
-        "kaleidoscope.h"
+        "kaleidoscope.h",
     ],
     includes = ["."],
     deps = ["@llvm"],

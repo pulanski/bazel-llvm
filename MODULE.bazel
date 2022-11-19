@@ -1,3 +1,14 @@
+"""
+Brings in third party dependencies via `bzlmod`,
+Bazel's new dependency management system.
+
+(Make sure you are using Bazel 4.2.1 or later and have
+the `build --experimental_enable_bzlmod` in your .bazelrc).
+
+NOTE: The comment above is a temporary necessity to use
+until Bazel 6.0 is released. After that, the `build --experimental_enable_bzlmod` will not be necessary.
+"""
+
 module(
     name = "bazel-llvm",
     version = "0.1.0",
@@ -22,4 +33,30 @@ bazel_dep(name = "glog", version = "0.5.0", repo_name = "com_google_glog")
 bazel_dep(name = "gflags", version = "2.2.2", repo_name = "com_gflags_gflags")
 bazel_dep(name = "fmt", version = "8.1.1", repo_name = "com_fmtlib_fmt")
 bazel_dep(name = "zlib", version = "1.2.13", repo_name = "com_madler_zlib")
-bazel_dep(name = "rules_python", version = "0.12.0")
+
+# TODO look into using this. Currently, it's not working.
+# Extensions doesn't seem to be exporting python properly.
+
+# bazel_dep(name = "rules_python", version = "0.12.0")
+
+# python = use_extension("@rules_python//python:extensions.bzl", "python")
+
+# python.toolchain(
+#     name = "python3_9",
+#     python_version = "3.9",
+# )
+
+# use_repo(python, "python3_9_toolchains")
+
+# register_toolchains(
+#     "@python3_9_toolchains//:all",
+# )
+
+# pip = use_extension("@rules_python//python:extensions.bzl", "pip")
+
+# pip.parse(
+#     name = "pip",
+#     requirements_lock = "//:requirements_lock.txt",
+# )
+
+# use_repo(pip, "pip")

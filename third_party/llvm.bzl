@@ -1,4 +1,24 @@
-"""Build definitions for LLVM"""
+"""
+Bazel rule for bringing **LLVM build definitions** into Bazel's sandbox environment
+
+Brings **LLVM** into the scope of a bazel workspace.
+This rule brings **LLVM** into the scope of a bazel workspace file primarily
+designed for usage within **C++ binaries and libraries** (e.g. `cc_binary`,
+`cc_library`). This is done by declaring `@llvm` as a dependency in your `BUILD`
+files. With `@llvm` declared as a dependency you can then use LLVM classes, header
+files, etc. in your project (e.g. `#include "llvm/IR/Value.h"`).
+
+**Args**:
+
+  _name_: A string. Name of the rule.
+
+  _version_: A string. The version of LLVM to use (e.g. `15.0.4`, `14.0.0`, etc.) (Check
+  https://github.com/llvm/llvm-project/releases for more details)
+
+  _os_arch_: A string. The OS and CPU architecture combination to build for (e.g.
+  `arm64-apple-darwin21.0`, `powerpc64le-linux-ubuntu-18.04.5`) (Check
+  https://github.com/llvm/llvm-project/releases for more details)
+"""
 
 LLVM_VERSION = "15.0.4"
 OS_ARCH = "arm64-apple-darwin21.0"
@@ -10,7 +30,8 @@ def _impl(ctx):
 
     # Download the pre-built LLVM binaries.
     version = ctx.attr.version
-    name = "clang+llvm-%s-%s" % (version, OS_ARCH)
+    name = "clang+llvm-%s-%s" % (ctx.attr.version, ctx.attr.os_arch)
+    # name = "clang+llvm-%s-%s" % (version, OS_ARCH)
 
     # https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.4/clang+llvm-15.0.4-arm64-apple-darwin21.0.tar.xz
     ctx.download_and_extract(
@@ -96,6 +117,8 @@ def llc(name, src, out):
 llvm = repository_rule(
     implementation = _impl,
     attrs = {
+        # The OS / CPU architecture combination to fetch for LLVM
+        "os_arch": attr.string(default = OS_ARCH),
         # The version of LLVM to download.
         "version": attr.string(default = LLVM_VERSION),
         # The name of the workspace() this is being included in.

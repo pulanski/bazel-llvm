@@ -1,5 +1,10 @@
-load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+# BUILD.bazel
+# gazelle:exclude external
+
+# load("@bazel_gazelle//:def.bzl", "gazelle")
+# load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 config_setting(
     name = "on_linux",
@@ -32,11 +37,25 @@ config_setting(
 refresh_compile_commands(
     name = "refresh_compile_commands",
     targets = {
-        "//src:main": "",  # empty string means "no additional flags"
+        "//...": "",
     },
 )
 
 # TODO currently not working (having issues w/ go toolchains)
-buildifier(
-    name = "buildifier",
+# buildifier(
+#     name = "buildifier",
+# )
+
+# gazelle(name = "gazelle")
+
+compile_pip_requirements(
+    name = "requirements",
+    extra_args = ["--allow-unsafe"],
+    requirements_in = "requirements.in",
+    requirements_txt = "requirements_lock.txt",
+    tags = [
+        # The test pings pypi.org to make sure that the lock file matches the
+        # requirements file.
+        "requires-network",
+    ],
 )
