@@ -8,6 +8,13 @@ plugins:
           uri: https://github.com/trunk-io/plugins
 lint:
     enabled:
+        - shellcheck@0.8.0
+        - clang-tidy@14.0.0
+        - flake8@5.0.4
+        - black@22.10.0
+        - shfmt@3.5.0
+        - isort@5.10.1
+        - markdownlint@0.32.2
         - actionlint@1.6.22
         # - clang-tidy@14.0.0
         - buildifier@5.1.0
@@ -16,12 +23,15 @@ lint:
         - prettier@2.7.1
         - clang-format@14.0.0
     ignore:
-        - linters: [ALL]
+        - linters: [prettier]
           paths:
-              # Generated docs
+              # Generated Docs
               - docs/**
+              # Dependabot
+              - .github/dependabot.yml
 runtimes:
     enabled:
+        - python@3.10.3
         - go@1.18.3
         - node@16.14.2
 actions:
