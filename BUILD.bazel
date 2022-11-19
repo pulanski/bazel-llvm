@@ -1,38 +1,40 @@
 # BUILD.bazel
 # gazelle:exclude external
 
-# load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
 # load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
+load("@pip//:requirements.bzl", "all_whl_requirements")
+
+# load("@rules_python//gazelle/manifest:defs.bzl", "gazelle_python_manifest")
+load("@rules_python//gazelle/modules_mapping:def.bzl", "modules_mapping")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
-config_setting(
-    name = "on_linux",
-    constraint_values = [
-        "@bazel_tools//platforms:linux",
-    ],
+# This rule fetches the metadata for python packages we depend on. That data is
+# required for the gazelle_python_manifest rule to update our manifest file.
+modules_mapping(
+    name = "modules_map",
+    wheels = all_whl_requirements,
 )
 
-config_setting(
-    name = "on_osx",
-    constraint_values = [
-        "@bazel_tools//platforms:osx",
-    ],
-)
+# Gazelle python extension needs a manifest file mapping from
+# an import to the installed package that provides it.
+# This macro produces two targets:
+# - //:gazelle_python_manifest.update can be used with `bazel run`
+#   to recalculate the manifest
+# - //:gazelle_python_manifest.test is a test target ensuring that
+#   the manifest doesn't need to be updated
+# TODO not working yet, need to configure third_party deps
+# gazelle_python_manifest(
+#     name = "gazelle_python_manifest",
+#     modules_mapping = ":modules_map",
+#     pip_repository_incremental = True,
+#     pip_repository_name = "pip",
+#     requirements = "//:requirements_lock.txt",
+# )
 
-config_setting(
-    name = "on_freebsd",
-    constraint_values = [
-        "@bazel_tools//platforms:freebsd",
-    ],
-)
-
-config_setting(
-    name = "on_windows",
-    constraint_values = [
-        "@bazel_tools//platforms:windows",
-    ],
-)
+gazelle(name = "gazelle")
 
 refresh_compile_commands(
     name = "refresh_compile_commands",
@@ -40,13 +42,6 @@ refresh_compile_commands(
         "//...": "",
     },
 )
-
-# TODO currently not working (having issues w/ go toolchains)
-# buildifier(
-#     name = "buildifier",
-# )
-
-# gazelle(name = "gazelle")
 
 compile_pip_requirements(
     name = "requirements",
