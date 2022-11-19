@@ -7,6 +7,9 @@
 # Windows directory attributes
 **/Thumbs.db
 
+# Mypy cache
+**/.mypy_cache
+
 # Compressed files
 *.gz
 

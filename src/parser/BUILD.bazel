@@ -15,6 +15,6 @@ cc_library(
         "//src/ast:number_expr_ast",
         "//src/ast:variable_expr_ast",
         "//src/lexer",
-        "//src/logger"
-    ]
+        "//src/logger",
+    ],
 )

@@ -20,16 +20,28 @@ BUILD_BUDDY_SHA = "a2a5cccec251211e2221b1587af2ce43c36d32a42f5d881737db3b546a536
 BUILD_BUDDY_COMMIT = "829c8a574f706de5c96c54ca310f139f4acda7dd"
 
 # Go
-RULES_GO_SHA = "27b77fd0d6d704da1a37ac56428a68ecd2f54cfcea5a6bae4bc876564f37fb95"
+# RULES_GO_SHA = "27b77fd0d6d704da1a37ac56428a68ecd2f54cfcea5a6bae4bc876564f37fb95"
 
-RULES_GO_VERSION = "cd9a99a102c3599babe6d8aebaa568961370541c"
+# RULES_GO_VERSION = "cd9a99a102c3599babe6d8aebaa568961370541c"
 
-GO_VERSION = "1.19.1"
+# GO_VERSION = "1.19.1"
 
-# Gazelle
-GAZELLE_SHA = "fdfa7f0969e997d26378dd283fab89379403bd4379051da81f7268d5c04398f7"
+# # Gazelle
+# GAZELLE_SHA = "fdfa7f0969e997d26378dd283fab89379403bd4379051da81f7268d5c04398f7"
 
-GAZELLE_COMMIT = "06b821c9b085f3d7c21af06a33a990513351431c"
+# GAZELLE_COMMIT = "06b821c9b085f3d7c21af06a33a990513351431c"
+
+# LLVM
+LLVM_VERSION = "15.0.4"
+
+LLVM_OS_ARCH = "arm64-apple-darwin21.0"
+
+# Python
+RULES_PYTHON_SHA = "4605a15abef6454511653f3d6dd26bce10b4f924a72299d2fdcf42f6313134a8"
+
+RULES_PYTHON_VERSION = "a364fcac97b7ccadb5c5a703ec8ce2f2ecef0d97"
+
+PYTHON_VERSION = "3.9.10"
 
 # Buildtools (buildifier, buildozer, unused_deps)
 # BUILD_TOOLS_SHA =
@@ -38,18 +50,18 @@ GAZELLE_COMMIT = "06b821c9b085f3d7c21af06a33a990513351431c"
 
 # Configure a Go toolchain.
 # See https://github.com/bazelbuild/rules_go for more details.
-http_archive(
-    name = "io_bazel_rules_go",
-    sha256 = RULES_GO_SHA,
-    strip_prefix = "rules_go-%s" % RULES_GO_VERSION,
-    urls = ["https://github.com/bazelbuild/rules_go/archive/%s.tar.gz" % RULES_GO_VERSION],
-)
+# http_archive(
+#     name = "io_bazel_rules_go",
+#     sha256 = RULES_GO_SHA,
+#     strip_prefix = "rules_go-%s" % RULES_GO_VERSION,
+#     urls = ["https://github.com/bazelbuild/rules_go/archive/%s.tar.gz" % RULES_GO_VERSION],
+# )
 
-load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
+# load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 
-go_rules_dependencies()
+# go_rules_dependencies()
 
-go_register_toolchains(version = GO_VERSION)
+# go_register_toolchains(version = GO_VERSION)
 
 # Bring in Gazelle, a build file generator for Bazel.
 # Gazelle can be used to generate BUILD files for the following languages.
@@ -64,39 +76,76 @@ go_register_toolchains(version = GO_VERSION)
 # - Starlark
 #
 # See https://github.com/bazelbuild/bazel-gazelle for more details.
-http_archive(
-    name = "bazel_gazelle",
-    sha256 = GAZELLE_SHA,
-    strip_prefix = "bazel-gazelle-%s" % GAZELLE_COMMIT,
-    urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/%s.tar.gz" % GAZELLE_COMMIT],
-)
+# http_archive(
+#     name = "bazel_gazelle",
+#     sha256 = GAZELLE_SHA,
+#     strip_prefix = "bazel-gazelle-%s" % GAZELLE_COMMIT,
+#     urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/%s.tar.gz" % GAZELLE_COMMIT],
+# )
 
-load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+# load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
-gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
+# gazelle_dependencies(go_repository_default_config = "//:WORKSPACE.bazel")
 # gazelle_dependencies(go_repository_default_config = "@//:WORKSPACE.bazel")
 
+# http_archive(
+#     name = "com_google_protobuf",
+#     sha256 = "3bd7828aa5af4b13b99c191e8b1e884ebfa9ad371b0ce264605d347f135d2568",
+#     strip_prefix = "protobuf-3.19.4",
+#     urls = [
+#         "https://github.com/protocolbuffers/protobuf/archive/v3.19.4.tar.gz",
+#     ],
+# )
+
+# load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+# protobuf_deps()
+
+# http_archive(
+#     name = "com_github_bazelbuild_buildtools",
+#     sha256 = "ae34c344514e08c23e90da0e2d6cb700fcd28e80c02e23e4d5715dddcb42f7b3",
+#     strip_prefix = "buildtools-4.2.2",
+#     urls = [
+#         "https://github.com/bazelbuild/buildtools/archive/refs/tags/4.2.2.tar.gz",
+#     ],
+# )
+
+# Configure a Python toolchain.
+# See https://github.com/bazelbuild/rules_python for more details.
 http_archive(
-    name = "com_google_protobuf",
-    sha256 = "3bd7828aa5af4b13b99c191e8b1e884ebfa9ad371b0ce264605d347f135d2568",
-    strip_prefix = "protobuf-3.19.4",
-    urls = [
-        "https://github.com/protocolbuffers/protobuf/archive/v3.19.4.tar.gz",
-    ],
+    name = "rules_python",
+    sha256 = RULES_PYTHON_SHA,
+    strip_prefix = "rules_python-%s" % RULES_PYTHON_VERSION,
+    urls = ["https://github.com/bazelbuild/rules_python/archive/%s.tar.gz" % RULES_PYTHON_VERSION],
 )
 
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
-protobuf_deps()
-
-http_archive(
-    name = "com_github_bazelbuild_buildtools",
-    sha256 = "ae34c344514e08c23e90da0e2d6cb700fcd28e80c02e23e4d5715dddcb42f7b3",
-    strip_prefix = "buildtools-4.2.2",
-    urls = [
-        "https://github.com/bazelbuild/buildtools/archive/refs/tags/4.2.2.tar.gz",
-    ],
+python_register_toolchains(
+    name = "python3_9",
+    # Available versions are listed in @rules_python//python:versions.bzl.
+    # We recommend using the same version your team is already standardized on.
+    python_version = PYTHON_VERSION,
 )
+
+# load("@python3_9//:defs.bzl", "interpreter")
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
+    # (Optional) You can set an environment in the pip process to control its
+    # behavior. Note that pip is run in "isolated" mode so no PIP_<VAR>_<NAME>
+    # style env vars are read, but env vars that control requests and urllib3
+    # can be passed
+    # environment = {"HTTPS_PROXY": "http://my.proxy.fun/"},
+    name = "pip",
+    # python_interpreter_target = interpreter,
+    requirements_lock = "//:requirements_lock.txt",
+)
+
+load("@pip//:requirements.bzl", "install_deps")
+
+# Initialize repositories for all packages in requirements_lock.txt.
+install_deps()
 
 load("//third_party:llvm_transitive_deps.bzl", "llvm_transitive_deps")
 
@@ -112,6 +161,8 @@ load("//third_party:llvm.bzl", "llvm")
 
 llvm(
     name = "llvm",
+    os_arch = LLVM_OS_ARCH,
+    version = LLVM_VERSION,
     workspace_name = WORKSPACE_NAME,
 )
 
