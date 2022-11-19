@@ -6,7 +6,7 @@ steps:
             command: "cppcheck src/"
           - label: ":cmake: clang-format"
             command: "fd --extension cc --extension h --exec clang-format -style=Google"
-          - label: ":repolinter: trunk check"
+          - label: ":repolinter: trunk check --ci"
             command: "trunk check"
     - label: ":buildkite: :bazel: :mac: bazel build //..."
       command: "bazel build //..."
