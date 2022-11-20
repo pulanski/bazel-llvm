@@ -5,18 +5,18 @@ load("@bazel_gazelle//:def.bzl", "gazelle")
 
 # load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
 load("@hedron_compile_commands//:refresh_compile_commands.bzl", "refresh_compile_commands")
-load("@pip//:requirements.bzl", "all_whl_requirements")
+# load("@pip//:requirements.bzl", "all_whl_requirements")
 
 # load("@rules_python//gazelle/manifest:defs.bzl", "gazelle_python_manifest")
-load("@rules_python//gazelle/modules_mapping:def.bzl", "modules_mapping")
+# load("@rules_python//gazelle/modules_mapping:def.bzl", "modules_mapping")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 # This rule fetches the metadata for python packages we depend on. That data is
 # required for the gazelle_python_manifest rule to update our manifest file.
-modules_mapping(
-    name = "modules_map",
-    wheels = all_whl_requirements,
-)
+# modules_mapping(
+#     name = "modules_map",
+#     wheels = all_whl_requirements,
+# )
 
 # Gazelle python extension needs a manifest file mapping from
 # an import to the installed package that provides it.

@@ -18,7 +18,7 @@ cc_library(
     ],
     deps = [
         ":expr_ast",
-        "//src/kaleidoscope",
+        "//src/globals",
         "//src/logger",
     ],
 )
@@ -31,7 +31,7 @@ cc_library(
     ],
     deps = [
         ":expr_ast",
-        "//src/kaleidoscope",
+        "//src/globals",
         "//src/logger",
         "@llvm",
     ],
@@ -59,7 +59,7 @@ cc_library(
     ],
     deps = [
         ":expr_ast",
-        "//src/kaleidoscope",
+        "//src/globals",
     ],
 )
 
@@ -70,7 +70,7 @@ cc_library(
         "prototype_ast.h",
     ],
     deps = [
-        "//src/kaleidoscope",
+        "//src/globals",
         "@llvm",
     ],
 )
@@ -83,7 +83,7 @@ cc_library(
     ],
     deps = [
         ":expr_ast",
-        "//src/kaleidoscope",
+        "//src/globals",
         "//src/logger",
     ],
 )

@@ -1,6 +1,6 @@
 #include "prototype_ast.h"
 
-#include "src/kaleidoscope/kaleidoscope.h"
+#include "src/globals/globals.h"
 
 Function* PrototypeAST::codegen() {
     // Make the function type:  double(double,double) etc.

@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 from typing import List
 
 from colored import attr, bg, fg
@@ -50,6 +51,12 @@ def get_args():
         help="force generation of the target even if it already exists. [default: false]",
     )
     parser.add_argument(
+        "-d",
+        "--dry_run",
+        action="store_true",
+        help="print the generated files to stdout without writing them to disk. [default: false]",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
@@ -57,10 +64,17 @@ def get_args():
     )
 
     args = parser.parse_args()
-    return args.type, args.label, args.default_class, args.force, args.verbose
+    return (
+        args.type,
+        args.label,
+        args.default_class,
+        args.force,
+        args.dry_run,
+        args.verbose,
+    )
 
 
-type, label, default_class, force, verbose = get_args()
+type, label, default_class, force, dry_run, verbose = get_args()
 
 
 def get_new_library_contents(target: str) -> List[str]:
@@ -140,9 +154,13 @@ def log_library_generation(relative_dir: str, target: str):
 
 
 def generate_cc_library(absolute_dir: str, relative_dir: str, target: str):
-    # absolute_build_file_path = os.path.join(absolute_dir, BAZEL_BUILD_FILE)
+    absolute_build_file_path = os.path.join(absolute_dir, BAZEL_BUILD_FILE)
     absolute_cc_library_path = os.path.join(absolute_dir, target + ".cc")
     absolute_cc_header_path = os.path.join(absolute_dir, target + ".h")
+
+    relative_build_file_path = os.path.join(relative_dir, BAZEL_BUILD_FILE)
+    relative_cc_library_path = os.path.join(relative_dir, target + ".cc")
+    relative_cc_header_path = os.path.join(relative_dir, target + ".h")
 
     log_library_generation(relative_dir, target)
 
@@ -152,20 +170,27 @@ def generate_cc_library(absolute_dir: str, relative_dir: str, target: str):
     ):
         if force:
             info("--force flag is set, overwriting existing files")
-        # else:
-        # error(
-        #     f"Library files {relative_cc_library_path} or {relative_cc_header_path} already exist. Use --force to overwrite."
-        # )
+        else:
+            error(
+                f"Library files {relative_cc_library_path} or {relative_cc_header_path} already exist. Use --force to overwrite."
+            )
 
     # check if the build file exists
-    # if os.path.isfile(absolute_build_file_path):
-    # if verbose:
-    # info(f"BUILD file already exists at {relative_build_file_path}")
+    if os.path.isfile(absolute_build_file_path):
+        if verbose:
+            info(f"BUILD file already exists at {relative_build_file_path}")
 
-    # check if the target already exists
-    # build_file = open(absolute_build_file_path, "r")
-    # build_file_content = build_file.read()
-    # build_file.close()
+        # read the contents of the build file
+        build_file = open(absolute_build_file_path, "r")
+        existing_build_file_content = build_file.read()
+        build_file.close()
+
+        if re.search(
+            'load("@rules_cc//cc:defs.bzl", "cc_library")', existing_build_file_content
+        ):
+            with open(absolute_build_file_path, "r+") as build_file:
+                build_file.seek(0, 2)
+                # build_file.write(f"
 
     # if target in build_file_content:
     # if args.force:

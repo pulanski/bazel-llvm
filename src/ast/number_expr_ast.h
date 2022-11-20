@@ -1,7 +1,7 @@
 #pragma once
 
 #include "expr_ast.h"
-#include "src/kaleidoscope/kaleidoscope.h"
+#include "src/globals/globals.h"
 
 // Expression class for numeric literals like "1.0".
 class NumberExprAST : public ExprAST {

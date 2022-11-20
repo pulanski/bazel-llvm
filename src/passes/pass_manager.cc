@@ -6,7 +6,7 @@
 #include "llvm/Transforms/InstCombine/InstCombine.h"
 #include "llvm/Transforms/Scalar.h"
 #include "llvm/Transforms/Scalar/GVN.h"
-#include "src/kaleidoscope/kaleidoscope.h"
+#include "src/globals/globals.h"
 
 using namespace llvm;
 
@@ -30,9 +30,9 @@ void initializeModuleAndPassManager() {
     // Create reassociate pass.
     TheFPM->add(createReassociatePass());
     // Eliminate common subexpressions.
-    // TheFPM->add(createGVNPass());
+    TheFPM->add(createGVNPass());
     // Simplify the control flow graph (deleting unreachable blocks, etc).
-    // TheFPM->add(createCFGSimplificationPass());
+    TheFPM->add(createCFGSimplificationPass());
 
     TheFPM->doInitialization();
 }

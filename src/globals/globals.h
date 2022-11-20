@@ -1,7 +1,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 
+#include "kaleidoscope_jit.h"
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/IR/BasicBlock.h"
@@ -16,6 +18,7 @@
 
 using namespace std;
 using namespace llvm;
+using namespace llvm::orc;
 
 // This is an object that owns LLVM core data structures
 extern unique_ptr<LLVMContext> TheContext;
@@ -28,3 +31,5 @@ extern unique_ptr<Module> TheModule;
 
 // This map keeps track of which values are defined in the current scope
 extern map<string, Value*> symbolTable;
+
+extern unique_ptr<KaleidoscopeJIT> TheJIT;

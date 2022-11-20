@@ -1,0 +1,22 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "globals",
+    srcs = ["globals.cc"],
+    hdrs = [
+        "globals.h",
+    ],
+    includes = ["."],
+    deps = [
+        ":kaleidoscope_jit",
+        "@llvm",
+    ],
+)
+
+cc_library(
+    name = "kaleidoscope_jit",
+    hdrs = ["kaleidoscope_jit.h"],
+    deps = ["@llvm"],
+)

@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "expr_ast.h"
-#include "src/kaleidoscope/kaleidoscope.h"
+#include "src/globals/globals.h"
 #include "src/logger/logger.h"
 
 // Expression class for referencing a variable

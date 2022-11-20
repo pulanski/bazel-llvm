@@ -1,6 +1,6 @@
 #include "function_ast.h"
 
-#include "src/kaleidoscope/kaleidoscope.h"
+#include "src/globals/globals.h"
 #include "src/logger/logger.h"
 #include "src/passes/pass_manager.h"
 

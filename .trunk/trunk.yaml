@@ -9,7 +9,6 @@ plugins:
 lint:
     enabled:
         - shellcheck@0.8.0
-        - clang-tidy@14.0.0
         - flake8@5.0.4
         - black@22.10.0
         - shfmt@3.5.0

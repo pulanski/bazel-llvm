@@ -9,7 +9,7 @@ cc_library(
         "pass_manager.h",
     ],
     deps = [
-        "//src/kaleidoscope",
+        "//src/globals",
         "@llvm",
     ],
 )

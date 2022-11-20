@@ -14,5 +14,5 @@ class FunctionAST {
     FunctionAST(unique_ptr<PrototypeAST> proto, unique_ptr<ExprAST> block)
         : proto_(std::move(proto)), body_(std::move(block)) {}
 
-    auto codegen() -> Function*;
+    Function* codegen();
 };

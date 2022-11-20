@@ -13,7 +13,7 @@ def llvm_transitive_deps():
     # See https://github.com/facebook/zstd for more details.
     maybe(
         http_archive,
-        name = "zstd",
+        name = "com_facebook_zstd",
         build_file = "@com_pulanski_bazel_llvm//:third_party/zstd.BUILD",
         sha256 = ZSTD_SHA,
         strip_prefix = "zstd-%s" % ZSTD_VERSION,
