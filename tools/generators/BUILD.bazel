@@ -1,10 +1,22 @@
 load("@pip//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_binary(
-    name = "cc_generator",
-    srcs = ["cc_generator.py"],
-    main = "cc_generator.py",
+    name = "ccgen",
+    srcs = ["cc_generator/ccgen.py"],
+    main = "cc_generator/ccgen.py",
+    deps = [
+        requirement("colored"),
+        ":ccgen_common",
+    ],
+)
+
+py_library(
+    name = "ccgen_common",
+    srcs = [
+        "cc_generator/logger.py",
+        "cc_generator/utils.py",
+    ],
     deps = [
         requirement("colored"),
     ],
