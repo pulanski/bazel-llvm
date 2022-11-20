@@ -16,7 +16,6 @@ lint:
         - isort@5.10.1
         - markdownlint@0.32.2
         - actionlint@1.6.22
-        # - clang-tidy@14.0.0
         - buildifier@5.1.0
         - git-diff-check
         - gitleaks@8.15.0
