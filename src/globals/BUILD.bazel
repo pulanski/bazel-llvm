@@ -10,13 +10,14 @@ cc_library(
     ],
     includes = ["."],
     deps = [
-        ":kaleidoscope_jit",
+        ":jit",
         "@llvm",
     ],
 )
 
 cc_library(
-    name = "kaleidoscope_jit",
-    hdrs = ["kaleidoscope_jit.h"],
+    name = "jit",
+    srcs = ["jit.cc"],
+    hdrs = ["jit.h"],
     deps = ["@llvm"],
 )

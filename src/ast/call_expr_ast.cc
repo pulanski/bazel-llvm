@@ -10,7 +10,7 @@ Value* CallExprAST::codegen() {
 
     if (!CalleeF) {
         return logCodegenError(string("Unknown function ") + callee_ +
-                               "referenced");
+                               " referenced");
     }
 
     if (CalleeF->arg_size() != args_.size()) {

@@ -60,6 +60,11 @@ def get_args():
         action="store_true",
         help="generate a default class definition within the library. (e.g. class Baz { public: Baz(); ~Baz(); };) This is only applicable to libraries. [default: false]",
     )
+    # --deps (add a comma-separated list of dependencies to the generated target)
+    parser.add_argument(
+        "--deps",
+        help="add a comma-separated list of dependencies to the generated target. [default: None]",
+    )
     parser.add_argument(
         "-f",
         "--force",
@@ -79,15 +84,7 @@ def get_args():
         help="show verbose output [default: false]",
     )
 
-    args = parser.parse_args()
-    return (
-        args.type,
-        args.label,
-        args.default_class,
-        args.force,
-        args.dry_run,
-        args.verbose,
-    )
+    return parser.parse_args()
 
 
 def parse_label(label: str) -> Tuple[str, str]:

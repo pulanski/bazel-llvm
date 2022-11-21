@@ -11,6 +11,11 @@ using namespace std;
 /// Internal logger for general user-facing error messages
 void logError(const string& message);
 
+/// Log an error message and return the error code
+void logErrorAndExit(const string& message, uint8_t error_code);
+// Example: logErrorAndExit("Unknown function referenced", 308); // Error code
+// 308
+
 // TODO: Add more specific error messages
 /// Internal logger for user-facing error messages with location information
 

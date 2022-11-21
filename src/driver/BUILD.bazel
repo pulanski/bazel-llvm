@@ -9,6 +9,7 @@ cc_library(
         "driver.h",
     ],
     deps = [
+        "//src/globals:jit",
         "//src/parser",
     ],
 )

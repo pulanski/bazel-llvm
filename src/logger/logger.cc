@@ -13,6 +13,11 @@ void logError(const string& message) {
     print(" {}\n", message);
 }
 
+void logErrorAndExit(const string& message, uint8_t error_code) {
+    logError(format("E{} {}", error_code, message));
+    exit(error_code);
+}
+
 void logWarning(const string& message) {
     print(fg(color::black) | bg(color::orange_red) | emphasis::bold,
           " WARNING ");

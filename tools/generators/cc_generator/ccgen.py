@@ -37,7 +37,7 @@ def generate_cc_library(
         cc_build_file_contents,
         cc_header_contents,
         cc_library_contents,
-    ) = get_new_library_contents(target)
+    ) = get_new_library_contents(target, default_class)
 
     log_library_generation(relative_dir, target, default_class, verbose, dry_run)
 
@@ -68,7 +68,7 @@ def generate_cc_library(
     else:
         # create the build file
         build_file = open(absolute_build_file_path, "w")
-        build_file.write(CC_LIBRARY_LOAD_STATEMENT + "\n")
+        build_file.write(CC_LIBRARY_LOAD_STATEMENT + "\n\n")
         build_file.write(cc_build_file_contents)
         build_file.close()
 
@@ -96,38 +96,40 @@ def generate_cc_library(
 def main():
     """Driver for ccgen. Handles generating C++ binaries, libraries, and tests within the context of a Bazel workspace with initial boilerplate scaffolding."""
 
-    target_type, label, default_class, force, dry_run, verbose = get_args()
+    args = get_args()
 
-    relative_dir, target = parse_label(label)
+    relative_dir, target = parse_label(args.label)
+
+    print(args.deps)
 
     # append the directory to the workspace
     absolute_dir = os.path.join(WORKSPACE_DIR, relative_dir)
     os.makedirs(absolute_dir, exist_ok=True)
 
-    match target_type:
+    match args.type:
         case "lib":
-            if verbose:
+            if args.verbose:
                 info(
-                    f'{fg("grey_69")}Generating{fg("dark_orange_3a")} library target{fg("yellow")} {label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
+                    f'{fg("grey_69")}Generating{fg("dark_orange_3a")} library target{fg("yellow")} {args.label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
                 )
             generate_cc_library(
                 absolute_dir,
                 relative_dir,
                 target,
-                default_class,
-                verbose,
-                dry_run,
-                force,
+                args.default_class,
+                args.verbose,
+                args.dry_run,
+                args.force,
             )
         case "bin":
-            if verbose:
+            if args.verbose:
                 info(
-                    f'{fg("grey_69")}Generating{fg("red")} binary target{fg("yellow")} {label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
+                    f'{fg("grey_69")}Generating{fg("red")} binary target{fg("yellow")} {args.label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
                 )
         case "test":
-            if verbose:
+            if args.verbose:
                 info(
-                    f'{fg("grey_69")}Generating{fg("medium_spring_green")} test target{fg("yellow")} {label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
+                    f'{fg("grey_69")}Generating{fg("medium_spring_green")} test target{fg("yellow")} {args.label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
                 )
 
 

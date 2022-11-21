@@ -97,3 +97,12 @@ class KaleidoscopeJIT {
 };
 }  // namespace orc
 }  // namespace llvm
+
+// Initializes the JIT data structures within LLVM
+void initializeJIT();
+
+// LLVM construct that manages the JIT
+extern unique_ptr<KaleidoscopeJIT> TheJIT;
+
+// Helper for check-and-exit error handling.
+extern ExitOnError ExitOnErr;
