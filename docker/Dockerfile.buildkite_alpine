@@ -1,0 +1,30 @@
+FROM buildkite/agent:3.0.1
+
+RUN apk update \
+    && apk upgrade
+
+# Packages for most tools
+RUN apk add --no-cache clang g++ git make bash binutils-gold ruby python3 unzip
+# openjdk11
+
+# For installing remote packages and dependencies
+RUN apk --no-cache add ca-certificates wget
+
+# Packages for ESESC
+RUN apk add --no-cache boost-dev cmake flex-dev bison pixman-dev
+
+# Packages for musl
+RUN apk add --no-cache gcc musl-dev musl perl
+
+RUN apk add --no-cache gawk tcl-dev readline-dev libffi-dev
+
+# RUN wget -q -O /etc/apk/keys/david@ostrovsky.org-5a0369d6.rsa.pub https://raw.githubusercontent.com/davido/bazel-alpine-package/master/david@ostrovsky.org-5a0369d6.rsa.pub
+# RUN wget https://github.com/davido/bazel-alpine-package/releases/download/0.26.1/bazel-0.26.1-r0.apk
+# RUN apk add bazel-0.26.1-r0.apk
+
+# ADD https://raw.githubusercontent.com/davido/bazel-alpine-package/master/david@ostrovsky.org-5a0369d6.rsa.pub \
+#     /etc/apk/keys/david@ostrovsky.org-5a0369d6.rsa.pub
+# ADD https://github.com/davido/bazel-alpine-package/releases/download/0.26.1/bazel-0.26.1-r0.apk \
+#     /tmp/bazel-0.26.1-r0.apk
+# RUN apk add /tmp/bazel-0.26.1-r0.apk
+# RUN rm -f /tmp/bazel*apk

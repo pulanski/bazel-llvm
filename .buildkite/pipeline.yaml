@@ -4,11 +4,27 @@ steps:
       steps:
           - label: ":testobject: cppcheck"
             command: "cppcheck src/"
+            agents:
+                os: "macOS"
           - label: ":cmake: clang-format"
             command: "fd --extension cc --extension h --exec clang-format -style=Google"
+            agents:
+                os: "macOS"
           - label: ":repolinter: trunk check"
-            command: "trunk check --ci"
+            command: "trunk check --ci --filter=markdownlint"
+            agents:
+                os: "macOS"
     - label: ":buildkite: :bazel: :mac: bazel build //..."
       command: "bazel build //..."
+      agents:
+          os: "macOS"
+    - label: ":buildkite: :bazel: :docker: bazel build //..."
+      command: "bazel build //..."
+      agents:
+          docker: "true"
     - label: ":buildkite: :bazel: :mac: :test_tube: bazel test //..."
-      command: "bazel test -- //... -:requirements_test" # exclude requirements_test (currently broken)
+      command: "bazel test -- //... -:requirements_test"
+      agents:
+          os: "macOS"
+    - label: ":buildkite: :bazel: :docker: bazel test //..."
+      command: "bazel test -- //... -:requirements_test"
