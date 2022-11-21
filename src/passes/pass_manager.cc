@@ -17,7 +17,7 @@ void initializeModuleAndPassManager() {
     TheContext = make_unique<LLVMContext>();
     TheModule =
         make_unique<Module>("JIT Adventures with Bazel and LLVM", *TheContext);
-    // TheModule->setDataLayout()
+    TheModule->setDataLayout(TheJIT->getDataLayout());
 
     // Create a new builder for the module
     Builder = make_unique<IRBuilder<>>(*TheContext);

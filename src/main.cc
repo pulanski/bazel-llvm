@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "driver/driver.h"
+// #include "globals/kaleidoscope_jit.h"
 #include "lexer/lexer.h"
 #include "lexer/token.h"
 #include "logger/logger.h"
@@ -20,6 +21,9 @@ int main(int argc, char* argv[]) {
     // Initialize Glog
     google::InitGoogleLogging(argv[0]);
     LOG(INFO) << "Begin REPL...";
+
+    // Initialize LLVM JIT components
+    initializeJIT();
 
     // Install standard binary operators.
     // 1 is lowest precedence.

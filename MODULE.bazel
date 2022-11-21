@@ -3,10 +3,10 @@ Brings in third party dependencies via `bzlmod`,
 Bazel's new dependency management system.
 
 (Make sure you are using Bazel 4.2.1 or later and have
-the `build --experimental_enable_bzlmod` in your .bazelrc).
+the `common --experimental_enable_bzlmod` in your .bazelrc).
 
 NOTE: The comment above is a temporary necessity to use
-until Bazel 6.0 is released. After that, the `build --experimental_enable_bzlmod` will not be necessary.
+until Bazel 6.0 is released. After that, the `common --experimental_enable_bzlmod` will not be necessary.
 """
 
 module(

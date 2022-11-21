@@ -194,7 +194,6 @@ unique_ptr<FunctionAST> parseDefinition() {
     return nullptr;
 }
 
-/// toplevelexpr ::= expression
 unique_ptr<FunctionAST> parseTopLevelExpr() {
     if (auto expr = parseExpression()) {
         // Make an anonymous proto.

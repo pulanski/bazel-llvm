@@ -10,6 +10,23 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# Python
+RULES_PYTHON_SHA = "4605a15abef6454511653f3d6dd26bce10b4f924a72299d2fdcf42f6313134a8"
+
+RULES_PYTHON_VERSION = "a364fcac97b7ccadb5c5a703ec8ce2f2ecef0d97"
+
+PYTHON_VERSION = "3.9.10"
+
+# LLVM
+LLVM_VERSION = "15.0.4"
+
+LLVM_OS_ARCH = "arm64-apple-darwin21.0"
+
+# Clang-tidy
+CLANG_TIDY_SHA = "5a3649ac61413f279310058d90124ecb7c52c5ffb5749d9db10244ffd43225f6"
+
+CLANG_TIDY_COMMIT = "32919e10d57fce09eb714936ba6155aee9a73150"
+
 # Hedron
 HEDRON_SHA = "b0a8af42e06108ec62382703daf27f7d8d247fd1b930f249045c70cd9d22f72e"
 
@@ -19,30 +36,6 @@ HEDRON_COMMIT = "c200ce8b3e0baa04fa5cc3fb222260c9ea06541f"
 BUILD_BUDDY_SHA = "a2a5cccec251211e2221b1587af2ce43c36d32a42f5d881737db3b546a536510"
 
 BUILD_BUDDY_COMMIT = "829c8a574f706de5c96c54ca310f139f4acda7dd"
-
-# Go
-# RULES_GO_SHA = "27b77fd0d6d704da1a37ac56428a68ecd2f54cfcea5a6bae4bc876564f37fb95"
-
-# RULES_GO_VERSION = "cd9a99a102c3599babe6d8aebaa568961370541c"
-
-# GO_VERSION = "1.19.1"
-
-# # Gazelle
-# GAZELLE_SHA = "fdfa7f0969e997d26378dd283fab89379403bd4379051da81f7268d5c04398f7"
-
-# GAZELLE_COMMIT = "06b821c9b085f3d7c21af06a33a990513351431c"
-
-# LLVM
-LLVM_VERSION = "15.0.4"
-
-LLVM_OS_ARCH = "arm64-apple-darwin21.0"
-
-# Python
-RULES_PYTHON_SHA = "4605a15abef6454511653f3d6dd26bce10b4f924a72299d2fdcf42f6313134a8"
-
-RULES_PYTHON_VERSION = "a364fcac97b7ccadb5c5a703ec8ce2f2ecef0d97"
-
-PYTHON_VERSION = "3.9.10"
 
 # Buildtools (buildifier, buildozer, unused_deps)
 # BUILD_TOOLS_SHA =
@@ -61,6 +54,13 @@ new_git_repository(
     build_file = "third_party/go_yaml.BUILD",
     remote = "https://github.com/go-yaml/yaml.git",
     tag = "v3.0.1",
+)
+
+http_archive(
+    name = "bazel_clang_tidy",
+    sha256 = CLANG_TIDY_SHA,
+    strip_prefix = "bazel_clang_tidy-%s" % CLANG_TIDY_COMMIT,
+    url = "https://github.com/dayfoo/bazel_clang_tidy/archive/%s.tar.gz" % CLANG_TIDY_COMMIT,
 )
 
 # Configure a Python toolchain.
