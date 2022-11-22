@@ -19,5 +19,7 @@ cc_library(
     name = "jit",
     srcs = ["jit.cc"],
     hdrs = ["jit.h"],
-    deps = ["@llvm"],
+    deps = [
+        "@llvm",
+    ],
 )

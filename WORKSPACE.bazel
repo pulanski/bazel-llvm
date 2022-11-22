@@ -7,7 +7,7 @@ workspace(
     name = WORKSPACE_NAME,
 )
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Python
@@ -18,7 +18,7 @@ RULES_PYTHON_VERSION = "a364fcac97b7ccadb5c5a703ec8ce2f2ecef0d97"
 PYTHON_VERSION = "3.9.10"
 
 # LLVM
-LLVM_VERSION = "15.0.4"
+LLVM_VERSION = "15.0.5"
 
 LLVM_OS_ARCH = "arm64-apple-darwin21.0"
 
@@ -26,6 +26,11 @@ LLVM_OS_ARCH = "arm64-apple-darwin21.0"
 CLANG_TIDY_SHA = "5a3649ac61413f279310058d90124ecb7c52c5ffb5749d9db10244ffd43225f6"
 
 CLANG_TIDY_COMMIT = "32919e10d57fce09eb714936ba6155aee9a73150"
+
+# Fuzzing
+RULES_FUZZING_SHA = "6fd5814a271c90c196b9da723b642efb6752b2fcde137e42567a3c42a7cf9bb6"
+
+RULES_FUZZING_COMMIT = "949389c58e7cbbb2b3a2c7d3b840cefc3c0e6353"
 
 # Hedron
 HEDRON_SHA = "b0a8af42e06108ec62382703daf27f7d8d247fd1b930f249045c70cd9d22f72e"
@@ -117,6 +122,28 @@ llvm(
     os_arch = LLVM_OS_ARCH,
     version = LLVM_VERSION,
     workspace_name = WORKSPACE_NAME,
+)
+
+http_archive(
+    name = "rules_fuzzing",
+    sha256 = RULES_FUZZING_SHA,
+    strip_prefix = "rules_fuzzing-%s" % RULES_FUZZING_COMMIT,
+    urls = ["https://github.com/CodeIntelligenceTesting/rules_fuzzing/archive/%s.tar.gz" % RULES_FUZZING_COMMIT],
+)
+
+load("@rules_fuzzing//fuzzing:repositories.bzl", "rules_fuzzing_dependencies")
+
+rules_fuzzing_dependencies()
+
+load("@rules_fuzzing//fuzzing:init.bzl", "rules_fuzzing_init")
+
+rules_fuzzing_init()
+
+git_repository(
+    name = "cifuzz",
+    branch = "bazel-support",
+    remote = "https://github.com/CodeIntelligenceTesting/cifuzz",
+    strip_prefix = "tools/cmake/cifuzz/include/cifuzz",
 )
 
 # Hedron's Compile Commands Extractor for Bazel

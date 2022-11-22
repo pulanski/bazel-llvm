@@ -4,19 +4,22 @@
 #include <sstream>
 #include <vector>
 
+#include "src/ir_gen/ir_gen.h"
+
 // Generate LLVM code for function calls
 Value* CallExprAST::codegen() {
-    Function* CalleeF = TheModule->getFunction(callee_);
+    Function* callee = getFunction(callee_);
+    // Function* CalleeF = TheModule->getFunction(callee_);
 
-    if (!CalleeF) {
+    if (!callee) {
         return logCodegenError(string("Unknown function ") + callee_ +
                                " referenced");
     }
 
-    if (CalleeF->arg_size() != args_.size()) {
+    if (callee->arg_size() != args_.size()) {
         stringstream errorMessage;
         errorMessage << "Incorrect number of arguments passed, expected "
-                     << CalleeF->arg_size() << ", but instead found "
+                     << callee->arg_size() << ", but instead found "
                      << args_.size() << ".";
 
         return logCodegenError(errorMessage.str());
@@ -32,5 +35,5 @@ Value* CallExprAST::codegen() {
         }
     }
 
-    return Builder->CreateCall(CalleeF, argsV, "calltmp");
+    return Builder->CreateCall(callee, argsV, "calltmp");
 }

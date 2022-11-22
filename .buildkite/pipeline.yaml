@@ -28,3 +28,5 @@ steps:
           os: "macOS"
     - label: ":buildkite: :bazel: :docker: bazel test //..."
       command: "bazel test -- //... -:requirements_test"
+      agents:
+          docker: "true"

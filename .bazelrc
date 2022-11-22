@@ -23,6 +23,13 @@ build:windows --cxxopt='-std:c++17' # Note slightly different syntax.
 startup --windows_enable_symlinks  # <--- fix windows-related issues
 build --enable_runfiles            # <-------|
 
+# Fuzzing
+
+# Define the --config=asan-libfuzzer configuration.
+build:asan-libfuzzer --@rules_fuzzing//fuzzing:cc_engine=@rules_fuzzing//fuzzing/engines:libfuzzer
+build:asan-libfuzzer --@rules_fuzzing//fuzzing:cc_engine_instrumentation=libfuzzer
+build:asan-libfuzzer --@rules_fuzzing//fuzzing:cc_engine_sanitizer=asan
+
 # Performance fixes
 
 # Consider --experimental_remote_merkle_tree_cache_size as well

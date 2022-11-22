@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "src/globals/globals.h"
+#include "src/ir_gen/ir_gen.h"
 #include "src/parser/parser.h"
 #include "src/passes/pass_manager.h"
 
@@ -45,6 +46,10 @@ void handleDefinition() {
         logInfo("Successfully parsed a function definition.");
         if (auto fnIR = fnDef->codegen()) {
             fnIR->print(errs());
+            fprintf(stderr, "\n");
+            ExitOnErr(TheJIT->addModule(
+                ThreadSafeModule(std::move(TheModule), std::move(TheContext))));
+            initializeModuleAndPassManager();
         }
     } else {
         // Skip the token for error recovery
@@ -57,6 +62,8 @@ void handleExtern() {
         logInfo("Successfully parsed an extern.");
         if (auto fnIR = protoAST->codegen()) {
             fnIR->print(errs());
+            fprintf(stderr, "\n");
+            functionProtos[protoAST->getName()] = std::move(protoAST);
         }
     } else {
         // Skip the token for error recovery
