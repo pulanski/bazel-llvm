@@ -32,6 +32,7 @@ cc_library(
     deps = [
         ":expr_ast",
         "//src/globals",
+        "//src/ir_gen",
         "//src/logger",
         "@llvm",
     ],
@@ -46,6 +47,7 @@ cc_library(
     deps = [
         ":expr_ast",
         ":prototype_ast",
+        "//src/ir_gen",
         "//src/logger",
         "//src/passes:pass_manager",
     ],

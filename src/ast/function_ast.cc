@@ -1,24 +1,22 @@
 #include "function_ast.h"
 
 #include "src/globals/globals.h"
+#include "src/ir_gen/ir_gen.h"
 #include "src/logger/logger.h"
 #include "src/passes/pass_manager.h"
 
 Function* FunctionAST::codegen() {
+    // Transfer ownership of the prototype to the FunctionProtos map, but keep a
+    // reference to it for use below.
+    auto& p = *proto_;
+    functionProtos[proto_->getName()] = std::move(proto_);
+
     // First, check for an existing function from a previous 'extern'
     // declaration.
-    Function* fn = TheModule->getFunction(proto_->getName());
-
-    if (!fn) {
-        fn = proto_->codegen();
-    }
+    Function* fn = getFunction(p.getName());
 
     if (!fn) {
         return nullptr;
-    }
-
-    if (!fn->empty()) {
-        return (Function*)logCodegenError("Function cannot be redefined.");
     }
 
     // Create a new basic block to start insertion into.

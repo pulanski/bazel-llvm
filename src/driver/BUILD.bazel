@@ -10,6 +10,7 @@ cc_library(
     ],
     deps = [
         "//src/globals:jit",
+        "//src/ir_gen",
         "//src/parser",
     ],
 )
