@@ -4,7 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 stardoc_with_diff_test(
     name = "llvm",
-    bzl_library_target = "//third_party:llvm",
+    bzl_library_target = "//bazel/cc_toolchains:llvm",
 )
 
 update_docs(name = "update_docs")

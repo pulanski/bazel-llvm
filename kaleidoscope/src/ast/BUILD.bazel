@@ -1,0 +1,91 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "expr_ast",
+    hdrs = [
+        "expr_ast.h",
+    ],
+    deps = ["@llvm"],
+)
+
+cc_library(
+    name = "binary_expr_ast",
+    srcs = ["binary_expr_ast.cc"],
+    hdrs = [
+        "binary_expr_ast.h",
+    ],
+    deps = [
+        ":expr_ast",
+        "//kaleidoscope/src/globals",
+        "//kaleidoscope/src/logger",
+    ],
+)
+
+cc_library(
+    name = "call_expr_ast",
+    srcs = ["call_expr_ast.cc"],
+    hdrs = [
+        "call_expr_ast.h",
+    ],
+    deps = [
+        ":expr_ast",
+        "//kaleidoscope/src/globals",
+        "//kaleidoscope/src/ir_gen",
+        "//kaleidoscope/src/logger",
+        "@llvm",
+    ],
+)
+
+cc_library(
+    name = "function_ast",
+    srcs = ["function_ast.cc"],
+    hdrs = [
+        "function_ast.h",
+    ],
+    deps = [
+        ":expr_ast",
+        ":prototype_ast",
+        "//kaleidoscope/src/ir_gen",
+        "//kaleidoscope/src/logger",
+        "//kaleidoscope/src/passes:pass_manager",
+    ],
+)
+
+cc_library(
+    name = "number_expr_ast",
+    srcs = ["number_expr_ast.cc"],
+    hdrs = [
+        "number_expr_ast.h",
+    ],
+    deps = [
+        ":expr_ast",
+        "//kaleidoscope/src/globals",
+    ],
+)
+
+cc_library(
+    name = "prototype_ast",
+    srcs = ["prototype_ast.cc"],
+    hdrs = [
+        "prototype_ast.h",
+    ],
+    deps = [
+        "//kaleidoscope/src/globals",
+        "@llvm",
+    ],
+)
+
+cc_library(
+    name = "variable_expr_ast",
+    srcs = ["variable_expr_ast.cc"],
+    hdrs = [
+        "variable_expr_ast.h",
+    ],
+    deps = [
+        ":expr_ast",
+        "//kaleidoscope/src/globals",
+        "//kaleidoscope/src/logger",
+    ],
+)
