@@ -49,16 +49,22 @@ BUILD_BUDDY_COMMIT = "829c8a574f706de5c96c54ca310f139f4acda7dd"
 
 new_git_repository(
     name = "com_github_emirpasic_gods",
-    build_file = "third_party/gods.BUILD",
+    build_file = "bazel/build_tools/gods.BUILD",
     remote = "https://github.com/emirpasic/gods.git",
     tag = "v1.18.1",
 )
 
 new_git_repository(
     name = "in_gopkg_yaml_v2",
-    build_file = "third_party/go_yaml.BUILD",
+    build_file = "bazel/build_tools/go_yaml.BUILD",
     remote = "https://github.com/go-yaml/yaml.git",
     tag = "v3.0.1",
+)
+
+new_git_repository(
+    name = "com_github_yhirose_cpp_linenoise",
+    build_file = "bazel/common/cpp_linenoise.BUILD",
+    remote = "https://github.com/yhirose/cpp-linenoise.git",
 )
 
 http_archive(
@@ -105,7 +111,7 @@ load("@pip//:requirements.bzl", "install_deps")
 # Initialize repositories for all packages in requirements_lock.txt.
 install_deps()
 
-load("//third_party:llvm_transitive_deps.bzl", "llvm_transitive_deps")
+load("//bazel/cc_toolchains:llvm_transitive_deps.bzl", "llvm_transitive_deps")
 
 # Load in third party dependencies required for compilation
 # These currently include zlib and zstd which are transitive dependencies
@@ -115,7 +121,7 @@ load("//third_party:llvm_transitive_deps.bzl", "llvm_transitive_deps")
 llvm_transitive_deps()
 
 # Configure LLVM, compiler middle/backend infrastructure
-load("//third_party:llvm.bzl", "llvm")
+load("//bazel/cc_toolchains:llvm.bzl", "llvm")
 
 llvm(
     name = "llvm",

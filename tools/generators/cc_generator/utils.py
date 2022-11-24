@@ -2,9 +2,6 @@ import argparse
 import os
 from typing import List, Tuple
 
-# Constants used
-
-
 BAZEL_BUILD_FILE = "BUILD.bazel"
 CC_LIBRARY_LOAD_STATEMENT = 'load("@rules_cc//cc:defs.bzl", "cc_library")'
 # get $BUILD_WORKSPACE_DIRECTORY from the environment

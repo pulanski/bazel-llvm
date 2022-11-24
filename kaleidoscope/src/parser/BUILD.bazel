@@ -1,0 +1,20 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "parser",
+    srcs = ["parser.cc"],
+    hdrs = [
+        "parser.h",
+    ],
+    deps = [
+        "//kaleidoscope/src/ast:binary_expr_ast",
+        "//kaleidoscope/src/ast:call_expr_ast",
+        "//kaleidoscope/src/ast:function_ast",
+        "//kaleidoscope/src/ast:number_expr_ast",
+        "//kaleidoscope/src/ast:variable_expr_ast",
+        "//kaleidoscope/src/lexer",
+        "//kaleidoscope/src/logger",
+    ],
+)

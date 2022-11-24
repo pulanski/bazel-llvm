@@ -1,0 +1,17 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "mandelbrot",
+    srcs = ["main.cc"],
+    deps = [
+        "//mandelbrot/src/cli",
+        "//mandelbrot/src/logger",
+        "//mandelbrot/src/repl",
+        "//mandelbrot/src/utils",
+        "//third_party/indicators",
+        "@com_fmtlib_fmt//:fmt",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_glog//:glog",
+    ],
+)
