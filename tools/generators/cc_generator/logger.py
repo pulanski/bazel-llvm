@@ -43,13 +43,20 @@ def log_dry_run_and_exit():
     """Print a note to the user that no files were written to disk and exit."""
 
     print(
-        f"\n{bg('yellow')} DRY RUN {attr('reset')} {fg('grey_69')}No files were written to disk. Re-run without the `{fg('black')}--{fg('yellow')}dry_run{fg('grey_69')}` flag to write files to disk.{attr('reset')}"
+        f"\n{bg('yellow')} DRY RUN {attr('reset')} {fg('grey_69')}No"
+        " files were written to disk. Re-run without the"
+        f" `{fg('black')}--{fg('yellow')}dry_run{fg('grey_69')}` flag"
+        f" to write files to disk.{attr('reset')}"
     )
     exit(0)
 
 
 def log_library_generation(
-    relative_dir: str, target: str, default_class: bool, verbose: bool, dry_run: bool
+    relative_dir: str,
+    target: str,
+    default_class: bool,
+    verbose: bool,
+    dry_run: bool,
 ):
     relative_build_file_path = os.path.join(relative_dir, BAZEL_BUILD_FILE)
     relative_cc_library_path = os.path.join(relative_dir, target + ".cc")
@@ -65,14 +72,16 @@ def log_library_generation(
 
     # library file
     info(
-        f"{fg('grey_69')}Creating {fg('green')}{relative_cc_library_path}{fg('black')} ..."
+        f"{fg('grey_69')}Creating"
+        f" {fg('green')}{relative_cc_library_path}{fg('black')} ..."
     )
     if verbose:
         log_generated_contents(cc_library_contents)
 
     # header file
     info(
-        f"{fg('grey_69')}Creating {fg('green')}{relative_cc_header_path}{fg('black')} ...{attr('reset')}"
+        f"{fg('grey_69')}Creating"
+        f" {fg('green')}{relative_cc_header_path}{fg('black')} ..." + "{attr('reset')}"
     )
     if verbose:
         log_generated_contents(cc_header_contents)
@@ -80,11 +89,15 @@ def log_library_generation(
     # build file
     if os.path.exists(absolute_build_file_path):
         info(
-            f"{fg('grey_69')}Appending to {fg('green')}{relative_build_file_path}{fg('black')} ...{attr('reset')}"
+            f"{fg('grey_69')}Appending to"
+            f" {fg('green')}{relative_build_file_path}{fg('black')} ..."
+            + "{attr('reset')}"
         )
     else:
         info(
-            f"{fg('grey_69')}Creating {fg('green')}{relative_build_file_path}{fg('black')} ...{attr('reset')}"
+            f"{fg('grey_69')}Creating"
+            f" {fg('green')}{relative_build_file_path}{fg('black')} ..."
+            + "{attr('reset')}"
         )
 
     if verbose:

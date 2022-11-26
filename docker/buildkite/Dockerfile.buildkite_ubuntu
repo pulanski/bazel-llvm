@@ -3,12 +3,20 @@ FROM buildkite/agent:ubuntu
 RUN apt-get update \
     && apt-get upgrade -y
 
-# Transitive dependencies of bazel
+# Ensure transitive dependencies of Bazel are installed
 RUN apt-get -y install binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-9 g++ g++-9
 RUN apt-get -y install gcc gcc-9 gcc-9-base libasan5 libatomic1 libbinutils libc-dev-bin libc6-dev
 RUN apt-get -y install libcc1-0 libcrypt-dev libctf-nobfd0 libctf0 libgcc-9-dev libgomp1 libisl22
 RUN apt-get -y install libitm1 liblsan0 libmpc3 libmpfr6 libquadmath0 libstdc++-9-dev libtsan0
 RUN apt-get -y install libubsan1 linux-libc-dev manpages manpages-dev unzip zlib1g-dev
+
+# Static analysis tools (C++)
+RUN apt-get -y install clang-11 cppcheck
+# Static analysis tools (Python)
+RUN apt-get -y install black
+
+# Editor
+RUN apt-get -y install vim
 
 # Packages for most tools
 RUN apt-get install curl gpg

@@ -39,13 +39,19 @@ def get_args():
 
     parser = argparse.ArgumentParser(
         prog="ccgen",
-        description="Generate C++ binaries, libraries, and tests within the context of a Bazel workspace with initial boilerplate scaffolding.",
-        epilog="Specify a label for the library similar to how you would specify a label for a cc_library rule.\n\nExample: `//foo/bar:baz` will generate a library named baz in the foo/bar directory. The library will contain a BUILD file with a cc_library rule for a .cc file and associated .h file.",
+        description="Generate C++ binaries, libraries, and tests within the"
+        + " context of a Bazel workspace with initial boilerplate scaffolding.",
+        epilog="Specify a label for the library similar to how you would"
+        + " specify a label for a cc_library rule.\n\nExample: `//foo/bar:baz`"
+        + " will generate a library named baz in the foo/bar directory. The"
+        + " library will contain a BUILD file with a cc_library rule for a .cc"
+        + " file and associated .h file.",
     )
     parser.add_argument(
         "type",
         choices=["lib", "bin", "test"],
-        help="The type of target to generate. lib: a cc_library rule. bin: a cc_binary rule. test: a cc_test rule.",
+        help="The type of target to generate. lib: a cc_library rule. bin: a"
+        + " cc_binary rule. test: a cc_test rule.",
     )
     parser.add_argument(
         "label",
@@ -55,24 +61,34 @@ def get_args():
         "-c",
         "--default_class",
         action="store_true",
-        help="generate a default class definition within the library. (e.g. class Baz { public: Baz(); ~Baz(); };) This is only applicable to libraries. [default: false]",
+        help="generate a default class definition within the library. (e.g."
+        + " class Baz { public: Baz(); ~Baz(); };) This is only applicable to"
+        + " libraries. [default: false]",
     )
-    # --deps (add a comma-separated list of dependencies to the generated target)
+    # --deps (add a comma-separated list of deps to the generated target)
     parser.add_argument(
         "--deps",
-        help="add a comma-separated list of dependencies to the generated target. [default: None]",
+        help=(
+            "add a comma-separated list of dependencies to the"
+            " generated target. [default: None]"
+        ),
     )
     parser.add_argument(
         "-f",
         "--force",
         action="store_true",
-        help="force generation of the target even if it already exists. [default: false]",
+        help=(
+            "force generation of the target even if it already exists. [default: false]"
+        ),
     )
     parser.add_argument(
         "-d",
         "--dry_run",
         action="store_true",
-        help="print the generated files to stdout without writing them to disk. [default: false]",
+        help=(
+            "print the generated files to stdout without writing them"
+            " to disk. [default: false]"
+        ),
     )
     parser.add_argument(
         "-v",

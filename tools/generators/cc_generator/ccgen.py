@@ -13,9 +13,6 @@ from tools.generators.cc_generator.utils import (
     prepend_file,
 )
 
-# TODO refactor arg parsing into a class and pass
-# the class around where needed
-
 
 def generate_cc_library(
     absolute_dir: str,
@@ -39,20 +36,27 @@ def generate_cc_library(
         cc_library_contents,
     ) = get_new_library_contents(target, default_class)
 
-    log_library_generation(relative_dir, target, default_class, verbose, dry_run)
-
     # check if one of the library files already exists
-    if os.path.exists(absolute_cc_library_path) or os.path.exists(
+    if os.path.exists(absolute_cc_library_path) and os.path.exists(
         absolute_cc_header_path
     ):
         if force:
             info(
-                f"`{fg('black')}--{fg('yellow')}force{fg('grey_69')}` flag is set, overwriting existing files"
+                f"`{fg('black')}--{fg('yellow')}force{fg('grey_69')}`"
+                " flag is set, overwriting existing files"
             )
         else:
             error(
-                f"{fg('grey_69')}Library file {fg('green')}{relative_cc_library_path} {fg('grey_69')}or header file {fg('green')}{relative_cc_header_path} {fg('grey_69')}already exists. Use `{fg('black')}--{fg('yellow')}force{fg('grey_69')}` to overwrite them."
+                f"{fg('grey_69')}Library file"
+                f" {fg('green')}{relative_cc_library_path} {fg('grey_69')}or"
+                " header file"
+                f" {fg('green')}{relative_cc_header_path} {fg('grey_69')}"
+                " already exists. Use"
+                f" `{fg('black')}--{fg('yellow')}force{fg('grey_69')}` to"
+                " overwrite them."
             )
+
+    log_library_generation(relative_dir, target, default_class, verbose, dry_run)
 
     # if the build file exists, append to it
     if os.path.isfile(absolute_build_file_path):
@@ -63,7 +67,10 @@ def generate_cc_library(
 
         if existing_build_file_content.find(CC_LIBRARY_LOAD_STATEMENT) == -1:
             with open(absolute_build_file_path, "r+") as build_file:
-                prepend_file(absolute_build_file_path, CC_LIBRARY_LOAD_STATEMENT)
+                prepend_file(
+                    absolute_build_file_path,
+                    CC_LIBRARY_LOAD_STATEMENT,
+                )
                 build_file.close()
     else:
         # create the build file
@@ -88,13 +95,16 @@ def generate_cc_library(
     #     build_file_content = build_file_content.replace(target, "")
     # else:
     #     error(
-    #         f"Target {target} already exists in {relative_build_file_path}. Use --force to overwrite."
+    #         f"Target {target} already exists in
+    # {relative_build_file_path}. Use --force to overwrite."
     #     )
     # else:
 
 
 def main():
-    """Driver for ccgen. Handles generating C++ binaries, libraries, and tests within the context of a Bazel workspace with initial boilerplate scaffolding."""
+    """Driver for ccgen. Handles generating C++ binaries, libraries, and
+    tests within the context of a Bazel workspace with initial
+    boilerplate scaffolding."""
 
     args = get_args()
 
@@ -110,7 +120,11 @@ def main():
         case "lib":
             if args.verbose:
                 info(
-                    f'{fg("grey_69")}Generating{fg("dark_orange_3a")} library target{fg("yellow")} {args.label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
+                    f'{fg("grey_69")}Generating{fg("dark_orange_3a")} library'
+                    f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
+                    " directory"
+                    f' {fg("green")}{relative_dir}{fg("grey_69")} with'
+                    f' target {fg("blue")}:{target}{attr("reset")}'
                 )
             generate_cc_library(
                 absolute_dir,
@@ -124,12 +138,20 @@ def main():
         case "bin":
             if args.verbose:
                 info(
-                    f'{fg("grey_69")}Generating{fg("red")} binary target{fg("yellow")} {args.label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
+                    f'{fg("grey_69")}Generating{fg("red")} binary'
+                    f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
+                    " directory"
+                    f' {fg("green")}{relative_dir}{fg("grey_69")} with'
+                    f' target {fg("blue")}:{target}{attr("reset")}'
                 )
         case "test":
             if args.verbose:
                 info(
-                    f'{fg("grey_69")}Generating{fg("medium_spring_green")} test target{fg("yellow")} {args.label}{fg("grey_69")} in directory {fg("green")}{relative_dir}{fg("grey_69")} with target {fg("blue")}:{target}{attr("reset")}'
+                    f'{fg("grey_69")}Generating{fg("medium_spring_green")} test'
+                    f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
+                    " directory"
+                    f' {fg("green")}{relative_dir}{fg("grey_69")} with'
+                    f' target {fg("blue")}:{target}{attr("reset")}'
                 )
 
 
