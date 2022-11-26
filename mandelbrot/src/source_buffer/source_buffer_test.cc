@@ -1,13 +1,12 @@
 
 #include "mandelbrot/src/source_buffer/source_buffer.h"
 
-#include <gtest/gtest.h>
-
 #include <fstream>
 
 #include "absl/status/statusor.h"
+#include "gtest/gtest.h"
 
-namespace Mandelbrot {
+namespace Mandelbrot::Testing {
 
 fs::path createTestFile(string_view source_text) {
     fs::path test_file_path =
@@ -38,4 +37,4 @@ TEST(SourceBufferTest, CreateFromSourceText) {
     ASSERT_EQ(expected_buffer->get()->contents(), "Hello World");
 }
 
-}  // namespace Mandelbrot
+}  // namespace Mandelbrot::Testing
