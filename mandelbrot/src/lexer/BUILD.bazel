@@ -1,0 +1,28 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "lexer",
+    srcs = ["lexer.cc"],
+    hdrs = ["lexer.h"],
+    deps = [
+        ":token",
+    ],
+)
+
+cc_library(
+    name = "token",
+    srcs = ["token.cc"],
+    hdrs = ["token.h"],
+)
+
+cc_test(
+    name = "lexer_test",
+    srcs = ["lexer_test.cc"],
+    deps = [
+        ":lexer",
+        ":token",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
