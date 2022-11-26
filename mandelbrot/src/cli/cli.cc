@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-// #include "absl/status/status.h"
 #include "fmt/color.h"
 #include "glog/logging.h"
 #include "mandelbrot/src/logger/logger.h"
@@ -61,6 +60,25 @@ int parseCommandLineArgs(int argc, char* argv[],
     LOG(INFO) << "Successfully parsed command line arguments";
     LOG(INFO) << "CLI options:\n" << mandelbrot_cli->toString();
     return 0;
+}
+
+string MandelbrotCLI::toString() {
+    string files = cliPositionals.files.empty()
+                       ? "N/A"
+                       : StrJoin(cliPositionals.files, ", ");
+    return StrJoin(
+        vector<string>{
+            "MandelbrotCLI {", "  cliOptions {",
+            "    debug_mode: " + to_string(cliOptions.debug_mode) + ", ",
+            "    verbose_output: " + to_string(cliOptions.verbose_output) +
+                ", ",
+            "    eval_expr: " + cliOptions.eval_expr + ", ",
+            "    emit_tokens: " + to_string(cliOptions.emit_tokens) + ", ",
+            "    emit_ast: " + to_string(cliOptions.emit_ast) + ", ",
+            "    emit_ir: " + to_string(cliOptions.emit_ir), "  }, ",
+            "  cliPositionals {", "    files: " + files + ",", "  }, ",
+            "  mandelbrotVersion: " + mandelbrotVersion + ",", "}"},
+        "\n");
 }
 
 shared_ptr<MandelbrotCLI> mandelbrotCLI = make_shared<MandelbrotCLI>();

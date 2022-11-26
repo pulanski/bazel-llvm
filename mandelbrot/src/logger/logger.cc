@@ -10,25 +10,25 @@ using namespace std;
 using namespace fmt;
 using namespace absl;
 
-void logError(const string& message) {
+void logError(std::string_view message) {
     print(fg(color::black) | bg(color::crimson), " ERROR ");
     print(" {}\n", message);
 }
 
-void logErrorAndExit(const string& message, uint8_t error_code) {
+void logErrorAndExit(std::string_view message, uint8_t error_code) {
     logError(StrCat(format(fg(color::crimson), "E{}", error_code),
                     format(fg(color::black), ": "),
                     format(emphasis::italic, "{}", message)));
     exit(error_code);
 }
 
-void logWarning(const string& message) {
+void logWarning(std::string_view message) {
     print(fg(color::black) | bg(color::orange_red) | emphasis::bold,
           " WARNING ");
     print(" {}\n", message);
 }
 
-void logInfo(const string& message) {
+void logInfo(std::string_view message) {
     print(fg(color::black) | bg(color::yellow) | emphasis::bold, " INFO ");
     print(" {}\n", message);
 }

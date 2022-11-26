@@ -5,6 +5,7 @@ cc_binary(
     srcs = ["main.cc"],
     deps = [
         "//mandelbrot/src/cli",
+        "//mandelbrot/src/driver",
         "//mandelbrot/src/logger",
         "//mandelbrot/src/repl",
         "//mandelbrot/src/utils",

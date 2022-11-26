@@ -3,7 +3,7 @@ steps:
       key: "static-analysis"
       steps:
           - label: ":testobject: cppcheck"
-            command: "cppcheck src/"
+            command: "cppcheck ./"
             agents:
                 os: "macOS"
           - label: ":cmake: clang-format"

@@ -18,8 +18,10 @@ StatusOr<string> getMandelbrotVersion() {
         !bazel_workspace.empty()) {
         version_file =
             StrCat(getenv("BUILD_WORKSPACE_DIRECTORY"), "/.mandelbrotversion");
+        LOG(INFO) << "Running via Bazel, using version file: " << version_file;
     } else {
         version_file = ".mandelbrotversion";
+        LOG(INFO) << "Running via CMake, using version file: " << version_file;
     }
 
     if (!fs::exists(version_file)) {

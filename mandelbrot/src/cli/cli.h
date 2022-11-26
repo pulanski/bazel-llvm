@@ -37,24 +37,7 @@ class MandelbrotCLI {
           cliPositionals{files},
           mandelbrotVersion{mandelbrot_version} {}
 
-    string toString() {
-        string files = cliPositionals.files.empty()
-                           ? "N/A"
-                           : StrJoin(cliPositionals.files, ", ");
-        return StrJoin(
-            vector<string>{
-                "MandelbrotCLI {", "  cliOptions {",
-                "    debug_mode: " + to_string(cliOptions.debug_mode) + ", ",
-                "    verbose_output: " + to_string(cliOptions.verbose_output) +
-                    ", ",
-                "    eval_expr: " + cliOptions.eval_expr + ", ",
-                "    emit_tokens: " + to_string(cliOptions.emit_tokens) + ", ",
-                "    emit_ast: " + to_string(cliOptions.emit_ast) + ", ",
-                "    emit_ir: " + to_string(cliOptions.emit_ir), "  }, ",
-                "  cliPositionals {", "    files: " + files + ",", "  }, ",
-                "  mandelbrotVersion: " + mandelbrotVersion, "  },", "}"},
-            "\n");
-    }
+    string toString();
 };
 
 extern shared_ptr<MandelbrotCLI> mandelbrotCLI;

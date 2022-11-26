@@ -15,8 +15,8 @@ class CallExprAST : public ExprAST {
     vector<unique_ptr<ExprAST>> args_;
 
    public:
-    CallExprAST(const string& callee, vector<unique_ptr<ExprAST>> args)
+    CallExprAST(string_view callee, vector<unique_ptr<ExprAST>> args)
         : callee_(callee), args_(std::move(args)) {}
 
-    auto codegen() -> Value* override;
+    Value* codegen() override;
 };

@@ -1,7 +1,11 @@
 #pragma once
 
+#include "absl/status/status.h"
+
+using namespace absl;
+
 void initializeRepl();
 
-void mainLoop();
+void mandelbrotMainLoop();
 
 void mainDisplay();
