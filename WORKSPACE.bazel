@@ -85,6 +85,21 @@ new_git_repository(
     remote = "https://github.com/yhirose/cpp-linenoise.git",
 )
 
+##########
+# Replxx #
+##########
+
+REPLXX_COMMIT = "1f149bfe20bf6e49c1afd4154eaf0032c8c2fda2"
+
+http_archive(
+    name = "replxx",
+    build_file = "//bazel/third_party:replxx.BUILD",
+    # sha256 = "<sha256-digest>",
+    strip_prefix = "replxx-%s" % REPLXX_COMMIT,
+    # type = "zip",
+    url = "https://github.com/AmokHuginnsson/replxx/archive/%s.zip" % REPLXX_COMMIT,
+)
+
 ##############
 # Clang-tidy #
 ##############
