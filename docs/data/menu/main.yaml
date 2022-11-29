@@ -1,0 +1,9 @@
+---
+main:
+    - name:
+          en: Contributing
+      sub:
+          - name:
+                en: Code of Conduct
+            ref: "/contributing/code_of_conduct"
+      ref: "/contributing"

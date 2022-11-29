@@ -17,6 +17,24 @@ RULES_PYTHON_VERSION = "a364fcac97b7ccadb5c5a703ec8ce2f2ecef0d97"
 
 PYTHON_VERSION = "3.9.10"
 
+# Docker
+RULES_DOCKER_SHA = "b1e80761a8a8243d03ebca8845e9cc1ba6c82ce7c5179ce2b295cd36f7e394bf"
+
+RULES_DOCKER_VERSION = "0.25.0"
+
+# Hugo
+RULES_HUGO_SHA = "f076f8098d95e4d3636918eed0b8f09c252f62ac992ba5e396f10c6cf2137849"
+
+RULES_HUGO_VERSION = "2927451ff7fff708292eb7eb68ca278457c5dd78"
+
+HUGO_THEME_NAME = "com_github_yihui_hugo_xmin"
+
+HUGO_THEME_VERSION = "9c7c5bf984c78d8b1f74a678d0eee5a20b929b67"
+
+HUGO_THEME_OWNER = "yihui"
+
+HUGO_THEME_REPO = "hugo-xmin"
+
 # LLVM
 LLVM_VERSION = "15.0.5"
 
@@ -67,12 +85,22 @@ new_git_repository(
     remote = "https://github.com/yhirose/cpp-linenoise.git",
 )
 
+##############
+# Clang-tidy #
+##############
+
+# Configure clang-tidy usage via Bazel
+# See https://github.com/dayfoo/bazel_clang_tidy for more details.
 http_archive(
     name = "bazel_clang_tidy",
     sha256 = CLANG_TIDY_SHA,
     strip_prefix = "bazel_clang_tidy-%s" % CLANG_TIDY_COMMIT,
     url = "https://github.com/dayfoo/bazel_clang_tidy/archive/%s.tar.gz" % CLANG_TIDY_COMMIT,
 )
+
+##########
+# Python #
+##########
 
 # Configure a Python toolchain.
 # See https://github.com/bazelbuild/rules_python for more details.
@@ -111,6 +139,61 @@ load("@pip//:requirements.bzl", "install_deps")
 # Initialize repositories for all packages in requirements_lock.txt.
 install_deps()
 
+########
+# Hugo #
+########
+
+# Configure a Hugo toolchain.
+# See https://github.com/stackb/rules_hugo for more details.
+http_archive(
+    name = "build_stack_rules_hugo",
+    sha256 = RULES_HUGO_SHA,
+    strip_prefix = "rules_hugo-%s" % RULES_HUGO_VERSION,
+    url = "https://github.com/stackb/rules_hugo/archive/%s.zip" % RULES_HUGO_VERSION,
+)
+
+load("@build_stack_rules_hugo//hugo:rules.bzl", "github_hugo_theme")
+load("//bazel/rules_hugo:hugo_repository.bzl", "hugo_repository")
+
+# Load hugo binary itself
+#
+# Optionally, load a specific version of Hugo, with the 'version' argument
+hugo_repository(
+    name = "hugo",
+    extended = True,
+    version = "0.107.0",
+)
+
+# This makes a filegroup target "@com_github_yihui_hugo_xmin//:files"
+# available to your build files
+#
+github_hugo_theme(
+    name = HUGO_THEME_NAME,
+    commit = HUGO_THEME_VERSION,
+    owner = HUGO_THEME_OWNER,
+    repo = HUGO_THEME_REPO,
+)
+
+# Creates a filegroup target from a released archive from GitHub
+# this is useful when a theme uses compiled / aggregated sources NOT found
+# in a source root.
+http_archive(
+    name = "com_github_thegeeklab_hugo_geekdoc",
+    build_file_content = """
+filegroup(
+    name = "files",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"]
+)
+    """,
+    sha256 = "7fdd57f7d4450325a778629021c0fff5531dc8475de6c4ec70ab07e9484d400e",
+    url = "https://github.com/thegeeklab/hugo-geekdoc/releases/download/v0.34.2/hugo-geekdoc.tar.gz",
+)
+
+########
+# LLVM #
+########
+
 load("//bazel/cc_toolchains:llvm_transitive_deps.bzl", "llvm_transitive_deps")
 
 # Load in third party dependencies required for compilation
@@ -129,6 +212,10 @@ llvm(
     version = LLVM_VERSION,
     workspace_name = WORKSPACE_NAME,
 )
+
+###########
+# Fuzzing #
+###########
 
 http_archive(
     name = "rules_fuzzing",
@@ -182,3 +269,23 @@ buildbuddy_deps()
 load("@io_buildbuddy_buildbuddy_toolchain//:rules.bzl", "buildbuddy")
 
 buildbuddy(name = "buildbuddy_toolchain")
+
+##########
+# Docker #
+##########
+
+# Configure Docker usage via Bazel
+# See https://github.com/bazelbuild/rules_docker for more details.
+# TODO - not working due to issues with rules_go
+http_archive(
+    name = "io_bazel_rules_docker",
+    sha256 = RULES_DOCKER_SHA,
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v%s/rules_docker-v%s.tar.gz" % (RULES_DOCKER_VERSION, RULES_DOCKER_VERSION)],
+)
+
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
+
+container_repositories()

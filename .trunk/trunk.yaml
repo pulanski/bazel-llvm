@@ -25,6 +25,8 @@ lint:
         - gitleaks@8.15.1
         - prettier@2.8.0
         - clang-format@14.0.0
+        - terraform
+        - tflint
     ignore:
         - linters: [prettier]
           paths:
@@ -32,7 +34,10 @@ lint:
               - docs/**
               # Dependabot
               - .github/dependabot.yml
-        # TODO resolve hadolint issues
+        - linters: [markdownlint]
+          paths:
+              # Generated Docs
+              - docs/bazel/**
         - linters: [hadolint]
           paths:
               # Dockerfiles

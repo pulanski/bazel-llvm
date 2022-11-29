@@ -47,6 +47,13 @@
 # .env file for environment variables
 .env
 
+# Terraform
+.terraform/
+*.tfstate*
+*.tfvars
+*.log
+.terraform.lock.hcl
+
 # Vim
 .*.swp
 *.swp
@@ -63,3 +70,6 @@ tags.temp
 /compile_commands.json
 # Ignore the directory in which `clangd` stores its local index.
 /.cache/
+
+# Local Netlify folder
+.netlify
