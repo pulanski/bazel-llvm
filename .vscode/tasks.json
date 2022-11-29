@@ -15,5 +15,6 @@
       ],
       "problemMatcher": []
     }
-  ]
+  ],
+  "python.formatting.provider": "black"
 }
