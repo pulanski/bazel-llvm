@@ -1,0 +1,20 @@
+name: CI (trunk check nightly)
+on:
+    schedule:
+        # Run at 08:00 on every day-of-week from Monday through Friday.”
+        - cron: 0 8 * * 1-5
+    workflow_dispatch: {}
+
+jobs:
+    trunk_check:
+        name: Trunk Check Upload
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Trunk Check
+              uses: trunk-io/trunk-action@v1
+              with:
+                  trunk-token: ${{ secrets.TRUNK_TOKEN }}
