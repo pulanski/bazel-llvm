@@ -1,10 +1,36 @@
-load("@aspect_bazel_lib//lib:docs.bzl", "stardoc_with_diff_test", "update_docs")
+load("@build_stack_rules_hugo//hugo:rules.bzl", "hugo_serve", "hugo_theme")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("//bazel/rules_hugo:hugo_site.bzl", "hugo_site")
 
-package(default_visibility = ["//visibility:public"])
+DOCS_SITE = "bazel_llvm_docs"
 
-stardoc_with_diff_test(
-    name = "llvm",
-    bzl_library_target = "//bazel/cc_toolchains:llvm",
+hugo_theme(
+    name = "hugo_theme_geekdoc",
+    srcs = [
+        "@com_github_thegeeklab_hugo_geekdoc//:files",
+    ],
+    theme_name = "hugo-geekdoc",
 )
 
-update_docs(name = "update_docs")
+hugo_site(
+    name = DOCS_SITE,
+    config_dir = glob(["config/**"]),
+    content = glob(["content/**"]),
+    data = glob(["data/**"]),
+    quiet = False,
+    theme = ":hugo_theme_geekdoc",
+    verbose = True,
+)
+
+# Run local development server
+hugo_serve(
+    name = "serve",
+    dep = [":%s" % DOCS_SITE],
+)
+
+# Tar it up
+pkg_tar(
+    name = "%s_tar" % DOCS_SITE,
+    srcs = [":%s" % DOCS_SITE],
+    package_dir = "/",
+)
