@@ -24,5 +24,16 @@
 -   [ ] Finish configuring Hugo site for docs
 
 -   [ ] Finish setting up **CD** for docs
+
     -   [ ] Finish setting up **CD** for **cloud run**
     -   [ ] Finish setting up terraform for **cloud run**
+
+-   [ ] Get Python typing / tooling setup
+    -   [ ] mypy
+    -   [ ] facebook
+    -   [ ] google
+-   [ ] python cli arg parsing library from object or alternatives
+
+-   [ ] Continue implementing `ccgen` with parsing header file contents and generating function definitions (and tests)
+
+-   [ ] fix issue with logging in `ccgen` (not printing correctly)

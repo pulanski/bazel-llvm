@@ -7,7 +7,13 @@ CC_LIBRARY_LOAD_STATEMENT = 'load("@rules_cc//cc:defs.bzl", "cc_library")'
 # get $BUILD_WORKSPACE_DIRECTORY from the environment
 # (the directory where the bazel workspace is located on
 # the host machine)
-WORKSPACE_DIR = os.environ.get("BUILD_WORKSPACE_DIRECTORY")
+WORKSPACE_DIR = os.environ.get("BUILD_WORKSPACE_DIRECTORY", os.getcwd())
+CCGEN_VERSION = "0.0.1"
+
+
+############################
+# General helper functions #
+############################
 
 
 def prepend_file(filename: str, contents: str):
@@ -24,80 +30,74 @@ def prepend_file(filename: str, contents: str):
         f.write(contents.rstrip("\r\n") + "\n" + existing_content)
 
 
-def get_args():
-    """Parse command line arguments.
+def get_relative_paths(
+    label: str,
+    generator_type: str,
+) -> Tuple[str, str, str]:
+    """
+    Get the relative paths to the BUILD file, header file, and source
+    file for a given label.
+
+    Args:
+        `label`: the label of the target to generate
+        `type`: The type of the target.
 
     Returns:
-        A tuple of (type, label, default_class, force, verbose) where:
-
-        `type (str)`: the type of the target to generate
-        `label (str)`: the label of the target to generate
-        `default_class (str)`: the default class to use for the target
-        `force (bool)`: whether to overwrite an existing target
-        `verbose (bool)`: whether to print verbose output
+        A tuple of `(relative_dir, build_file_path, header_file_path, source_file_path)`
     """
 
-    parser = argparse.ArgumentParser(
-        prog="ccgen",
-        description="Generate C++ binaries, libraries, and tests within the"
-        + " context of a Bazel workspace with initial boilerplate scaffolding.",
-        epilog="Specify a label for the library similar to how you would"
-        + " specify a label for a cc_library rule.\n\nExample: `//foo/bar:baz`"
-        + " will generate a library named baz in the foo/bar directory. The"
-        + " library will contain a BUILD file with a cc_library rule for a .cc"
-        + " file and associated .h file.",
-    )
-    parser.add_argument(
-        "type",
-        choices=["lib", "bin", "test"],
-        help="The type of target to generate. lib: a cc_library rule. bin: a"
-        + " cc_binary rule. test: a cc_test rule.",
-    )
-    parser.add_argument(
-        "label",
-        help="The label for the library to generate (e.g. //foo/bar:baz).",
-    )
-    parser.add_argument(
-        "-c",
-        "--default_class",
-        action="store_true",
-        help="generate a default class definition within the library. (e.g."
-        + " class Baz { public: Baz(); ~Baz(); };) This is only applicable to"
-        + " libraries. [default: false]",
-    )
-    # --deps (add a comma-separated list of deps to the generated target)
-    parser.add_argument(
-        "--deps",
-        help=(
-            "add a comma-separated list of dependencies to the"
-            " generated target. [default: None]"
-        ),
-    )
-    parser.add_argument(
-        "-f",
-        "--force",
-        action="store_true",
-        help=(
-            "force generation of the target even if it already exists. [default: false]"
-        ),
-    )
-    parser.add_argument(
-        "-d",
-        "--dry_run",
-        action="store_true",
-        help=(
-            "print the generated files to stdout without writing them"
-            " to disk. [default: false]"
-        ),
-    )
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="show verbose output [default: false]",
-    )
+    (package, target) = parse_label(label)
 
-    return parser.parse_args()
+    relative_dir = os.path.join(*package.split("/"))
+    build_file_path = os.path.join(package, BAZEL_BUILD_FILE)
+    header_file_path = os.path.join(target, f"{target}.h")
+
+    if generator_type == "lib" or generator_type == "bin":
+        source_file_path = os.path.join(target, f"{target}.cc")
+    else:  # type == "test"
+        source_file_path = os.path.join(target, f"{target}_test.cc")
+    return (relative_dir, build_file_path, header_file_path, source_file_path)
+
+
+def get_absolute_paths(
+    label: str,
+    generator_type: str,
+) -> Tuple[str, str, str]:
+    """Get the absolute paths to the BUILD file, header file, and source
+    file for a given label and type (lib, bin, or test).
+
+    Args:
+        `label`: the label of the target to generate
+        `generator_type`: The type of the generated target (lib, bin, test).
+
+    Returns:
+        A tuple of `(absolute_dir, absolute_build_path, absolute_header_path,
+        absolute_source_path)`
+    """
+
+    package, target = parse_label(label)
+    (
+        relative_dir,
+        relative_build_path,
+        _,  # relative_header_path
+        _,  # relative_source_path
+    ) = get_relative_paths(label, generator_type)
+
+    absolute_dir = os.path.join(WORKSPACE_DIR, relative_dir)
+    absolute_build_path = os.path.join(WORKSPACE_DIR, relative_build_path)
+
+    absolute_header_path = os.path.join(WORKSPACE_DIR, package, f"{target}.h")
+    if generator_type == "lib" or generator_type == "bin":
+        absolute_source_path = os.path.join(WORKSPACE_DIR, package, f"{target}.cc")
+    else:  # type == "test"
+        absolute_source_path = os.path.join(WORKSPACE_DIR, package, f"{target}_test.cc")
+
+    return (
+        absolute_dir,
+        absolute_build_path,
+        absolute_header_path,
+        absolute_source_path,
+    )
 
 
 def parse_label(label: str) -> Tuple[str, str]:
@@ -120,22 +120,85 @@ def parse_label(label: str) -> Tuple[str, str]:
     return (package, target)
 
 
-def get_new_library_contents(target: str, default_class: bool) -> List[str]:
-    if default_class:
-        header_contents = f"""
-        #pragma once
+########################################
+# Helpers for generating file contents #
+########################################
 
-        class {target.title()} {{
-        public:
-            {target.title()}();
-            ~{target.title()}();
-        }};
-        """
-        source_contents = f"""
-        #include "{target}.h"
 
-        {target.title()}::{target.title()}() {{}}
-        """
+def create_generated_contents(
+    label: str,
+    args: argparse.Namespace,
+    absolute_cc_header_path: str,
+    absolute_cc_source_path: str,
+    absolute_cc_build_path: str,
+) -> List[str]:
+    """
+    Get the contents of a newly generated `cc_binary`, `cc_library`, or `cc_test`.
+
+    Args:
+        `label (str)`:                      the label of the target to generate
+        `args (argparse.Namespace)`:        the parsed command line arguments
+        `absolute_cc_header_path (str)`:    the absolute path to the
+                                            generated header file
+        `absolute_cc_library_path (str)`:   the absolute path to the
+                                            generated binary / library file
+        `absolute_cc_build_path (str)`:     the absolute path to the
+                                            generated BUILD file
+
+    Returns:
+        A list of strings representing the contents of the generated
+        `cc_binary`, `cc_library`, or `cc_test`.
+    """
+
+    match args.type:
+        case "lib":
+            return generated_cc_library_contents(
+                label,
+                args,
+                absolute_cc_header_path,
+                absolute_cc_source_path,
+                absolute_cc_build_path,
+            )
+
+
+def generated_cc_library_contents(
+    label: str,
+    args: argparse.Namespace,
+    absolute_cc_header_path: str,
+    absolute_cc_source_path: str,
+    absolute_cc_build_path: str,
+) -> List[str]:
+    """
+    Get the contents of a newly generated `cc_library`.
+
+    Args:
+        `label (str)`:                      the label of the target to generate
+        `args (argparse.Namespace)`:        the parsed command line arguments
+        `absolute_cc_header_path (str)`:    the absolute path to the
+                                            generated header file
+        `absolute_cc_library_path (str)`:   the absolute path to the
+                                            generated binary / library file
+        `absolute_cc_build_path (str)`:     the absolute path to the
+                                            generated BUILD file
+
+    Returns:
+        A list of strings representing the contents of the generated
+        `cc_library`.
+    """
+
+    (_, target) = parse_label(label)
+
+    if args.default_class:
+        header_contents = f"""#pragma once
+
+class {target.title()} {{
+public:
+    {target.title()}();
+    ~{target.title()}();
+}};"""
+        source_contents = f"""#include "{target}.h"
+
+{target.title()}::{target.title()}() {{}}"""
     else:
         header_contents = """#pragma once"""
         source_contents = f"""#include \"{target}.h\""""

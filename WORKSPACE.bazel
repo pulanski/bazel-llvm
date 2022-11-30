@@ -22,6 +22,11 @@ RULES_DOCKER_SHA = "b1e80761a8a8243d03ebca8845e9cc1ba6c82ce7c5179ce2b295cd36f7e3
 
 RULES_DOCKER_VERSION = "0.25.0"
 
+# Replxx
+REPLXX_COMMIT = "1f149bfe20bf6e49c1afd4154eaf0032c8c2fda2"
+
+REPLXX_SHA = "3c8c2fc2c4236ac730a4bfe022db51e1c3cd108ac0b44d4dbad4e7c5a2cf1205"
+
 # Hugo
 RULES_HUGO_SHA = "f076f8098d95e4d3636918eed0b8f09c252f62ac992ba5e396f10c6cf2137849"
 
@@ -83,6 +88,18 @@ new_git_repository(
     name = "com_github_yhirose_cpp_linenoise",
     build_file = "bazel/common/cpp_linenoise.BUILD",
     remote = "https://github.com/yhirose/cpp-linenoise.git",
+)
+
+##########
+# Replxx #
+##########
+
+http_archive(
+    name = "replxx",
+    build_file = "//bazel/third_party:replxx.BUILD",
+    sha256 = REPLXX_SHA,
+    strip_prefix = "replxx-%s" % REPLXX_COMMIT,
+    url = "https://github.com/AmokHuginnsson/replxx/archive/%s.zip" % REPLXX_COMMIT,
 )
 
 ##############

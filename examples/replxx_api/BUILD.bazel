@@ -1,0 +1,18 @@
+# load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+# cc_binary(
+#     name = "replxx_api",
+#     srcs = ["replxx_api.cc"],
+#     deps = [
+#         "//third_party/replxx",
+#     ],
+# )
+
+# cc_binary(
+#     name = "replxx",
+#     srcs = ["replxx.cc"],
+#     deps = [
+#         "@replxx",
+#         "@replxx//:replxx_util",
+#     ],
+# )
