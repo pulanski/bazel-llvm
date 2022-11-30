@@ -7,3 +7,12 @@
 #         "//third_party/replxx",
 #     ],
 # )
+
+# cc_binary(
+#     name = "replxx",
+#     srcs = ["replxx.cc"],
+#     deps = [
+#         "@replxx",
+#         "@replxx//:replxx_util",
+#     ],
+# )

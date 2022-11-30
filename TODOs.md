@@ -33,3 +33,7 @@
     -   [ ] facebook
     -   [ ] google
 -   [ ] python cli arg parsing library from object or alternatives
+
+-   [ ] Continue implementing `ccgen` with parsing header file contents and generating function definitions (and tests)
+
+-   [ ] fix issue with logging in `ccgen` (not printing correctly)

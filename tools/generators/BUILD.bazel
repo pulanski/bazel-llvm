@@ -3,8 +3,8 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_binary(
     name = "ccgen",
-    srcs = ["cc_generator/ccgen.py"],
-    main = "cc_generator/ccgen.py",
+    srcs = ["cc_generator/main.py"],
+    main = "cc_generator/main.py",
     deps = [
         requirement("colored"),
         ":ccgen_common",
@@ -14,7 +14,10 @@ py_binary(
 py_library(
     name = "ccgen_common",
     srcs = [
+        "cc_generator/cli.py",
+        "cc_generator/generators.py",
         "cc_generator/logger.py",
+        "cc_generator/source_contents.py",
         "cc_generator/utils.py",
     ],
     deps = [

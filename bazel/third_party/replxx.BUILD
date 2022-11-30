@@ -1,5 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
+package(default_visibility = ["//visibility:public"])
+
 licenses(["notice"])  # BSD
 
 exports_files(["LICENSE.md"])
@@ -9,9 +11,8 @@ cc_binary(
     srcs = [
         "examples/c-api.c",
     ],
-    visibility = ["//visibility:public"],
     deps = [
-        ":examples_util_lib",
+        ":replxx_util",
     ],
 )
 
@@ -20,14 +21,13 @@ cc_binary(
     srcs = [
         "examples/cxx-api.cxx",
     ],
-    visibility = ["//visibility:public"],
     deps = [
-        ":examples_util_lib",
+        ":replxx_util",
     ],
 )
 
 cc_library(
-    name = "examples_util_lib",
+    name = "replxx_util",
     srcs = [
         "examples/util.c",
     ],
@@ -74,5 +74,4 @@ cc_library(
         "include",
     ],
     linkstatic = True,
-    visibility = ["//visibility:public"],
 )

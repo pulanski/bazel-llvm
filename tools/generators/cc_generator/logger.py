@@ -1,11 +1,13 @@
+import argparse
 import os
 
 from colored import attr, bg, fg
 
 from tools.generators.cc_generator.utils import (
-    BAZEL_BUILD_FILE,
     WORKSPACE_DIR,
-    get_new_library_contents,
+    create_generated_contents,
+    get_relative_paths,
+    parse_label,
 )
 
 
@@ -51,39 +53,91 @@ def log_dry_run_and_exit():
     exit(0)
 
 
+def log_generated_target(args: argparse.Namespace):
+    """Logs the target to be generated to the user.
+
+    Args:
+        `args (argparse.Namespace)`: the parsed command line arguments
+    """
+
+    relative_dir, target = parse_label(args.label)
+
+    match args.type:
+        case "lib":
+            info(
+                f'{fg("grey_69")}Generating{fg("dark_orange_3a")} library'
+                f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
+                " directory"
+                f' {fg("green")}{relative_dir}{fg("grey_69")} with'
+                f' target {fg("blue")}:{target}{attr("reset")}'
+            )
+        case "bin":
+            info(
+                f'{fg("grey_69")}Generating{fg("red")} binary'
+                f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
+                " directory"
+                f' {fg("green")}{relative_dir}{fg("grey_69")} with'
+                f' target {fg("blue")}:{target}{attr("reset")}'
+            )
+        case "test":
+            info(
+                f'{fg("grey_69")}Generating{fg("medium_spring_green")} test'
+                f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
+                " directory"
+                f' {fg("green")}{relative_dir}{fg("grey_69")} with'
+                f' target {fg("blue")}:{target}{attr("reset")}'
+            )
+
+
 def log_library_generation(
     relative_dir: str,
-    target: str,
-    default_class: bool,
-    verbose: bool,
-    dry_run: bool,
+    args: argparse.Namespace,
 ):
-    relative_build_file_path = os.path.join(relative_dir, BAZEL_BUILD_FILE)
-    relative_cc_library_path = os.path.join(relative_dir, target + ".cc")
-    relative_cc_header_path = os.path.join(relative_dir, target + ".h")
+    # TODO refactor here to general `log_generated_target` function
+    """
+    Logs the library generation to the user.
+
+    Args:
+        `relative_dir (str)`:           the relative directory of the target
+        `args (argparse.Namespace)`:    the parsed command line arguments
+    """
+    (
+        _,
+        relative_build_file_path,
+        relative_cc_header_path,
+        relative_cc_source_path,
+    ) = get_relative_paths(args.label, relative_dir)
+
+    print(relative_cc_header_path, relative_cc_source_path)
 
     absolute_build_file_path = os.path.join(WORKSPACE_DIR, relative_build_file_path)
 
     (
         cc_build_file_contents,
         cc_header_contents,
-        cc_library_contents,
-    ) = get_new_library_contents(target, default_class)
+        cc_source_contents,
+    ) = create_generated_contents(
+        args.label,
+        args,
+        relative_cc_header_path,
+        relative_cc_source_path,
+        relative_build_file_path,
+    )
 
     # library file
     info(
         f"{fg('grey_69')}Creating"
-        f" {fg('green')}{relative_cc_library_path}{fg('black')} ..."
+        f" {fg('green')}{relative_cc_source_path}{fg('black')} ..."
     )
-    if verbose:
-        log_generated_contents(cc_library_contents)
+    if args.verbose:
+        log_generated_contents(cc_source_contents)
 
     # header file
     info(
         f"{fg('grey_69')}Creating"
-        f" {fg('green')}{relative_cc_header_path}{fg('black')} ..." + "{attr('reset')}"
+        f" {fg('green')}{relative_cc_header_path}{fg('black')} ..."
     )
-    if verbose:
+    if args.verbose:
         log_generated_contents(cc_header_contents)
 
     # build file
@@ -91,19 +145,17 @@ def log_library_generation(
         info(
             f"{fg('grey_69')}Appending to"
             f" {fg('green')}{relative_build_file_path}{fg('black')} ..."
-            + "{attr('reset')}"
         )
     else:
         info(
             f"{fg('grey_69')}Creating"
             f" {fg('green')}{relative_build_file_path}{fg('black')} ..."
-            + "{attr('reset')}"
         )
 
-    if verbose:
+    if args.verbose:
         log_generated_contents(cc_build_file_contents)
 
-    if dry_run:
+    if args.dry_run:
         log_dry_run_and_exit()
     # info(f"Generating library in {relative_dir} with target {target}...")
     # if args.default_class:

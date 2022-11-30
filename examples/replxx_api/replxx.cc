@@ -1,3 +1,5 @@
+#include "replxx.hxx"
+
 #include <cctype>
 #include <cerrno>
 #include <chrono>
@@ -12,8 +14,7 @@
 #include <utility>
 #include <vector>
 
-#include "third_party/replxx/replxx.h"
-#include "third_party/replxx/util.h"
+#include "util.h"
 
 using Replxx = replxx::Replxx;
 using namespace replxx::color;
@@ -178,99 +179,96 @@ Replxx::hints_t hook_hint(std::string const& context, int& contextLen,
 
 inline bool is_kw(char ch) { return isalnum(ch) || (ch == '_'); }
 
-// void hook_color(std::string const& context, Replxx::colors_t& colors,
-//                 syntax_highlight_t const& regex_color,
-//                 keyword_highlight_t const& word_color) {
-//     // highlight matching regex sequences
-//     for (auto const& e : regex_color) {
-//         size_t pos{0};
-//         std::string str = context;
-//         std::smatch match;
+void hook_color(std::string const& context, Replxx::colors_t& colors,
+                syntax_highlight_t const& regex_color,
+                keyword_highlight_t const& word_color) {
+    // highlight matching regex sequences
+    for (auto const& e : regex_color) {
+        size_t pos{0};
+        std::string str = context;
+        std::smatch match;
 
-//         while (std::regex_search(str, match, std::regex(e.first))) {
-//             std::string c{match[0]};
-//             std::string prefix(match.prefix().str());
-//             pos += utf8str_codepoint_len(prefix.c_str(),
-//                                          static_cast<int>(prefix.length()));
-//             int len(
-//                 utf8str_codepoint_len(c.c_str(),
-//                 static_cast<int>(c.length())));
+        while (std::regex_search(str, match, std::regex(e.first))) {
+            std::string c{match[0]};
+            std::string prefix(match.prefix().str());
+            pos += utf8str_codepoint_len(prefix.c_str(),
+                                         static_cast<int>(prefix.length()));
+            int len(
+                utf8str_codepoint_len(c.c_str(), static_cast<int>(c.length())));
 
-//             for (int i = 0; i < len; ++i) {
-//                 colors.at(pos + i) = e.second;
-//             }
+            for (int i = 0; i < len; ++i) {
+                colors.at(pos + i) = e.second;
+            }
 
-//             pos += len;
-//             str = match.suffix();
-//         }
-//     }
-//     bool inWord(false);
-//     int wordStart(0);
-//     int wordEnd(0);
-//     int colorOffset(0);
-//     auto dohl = [&](int i) {
-//         inWord = false;
-//         std::string intermission(context.substr(wordEnd, wordStart -
-//         wordEnd)); colorOffset +=
-//             utf8str_codepoint_len(intermission.c_str(),
-//             intermission.length());
-//         int wordLen(i - wordStart);
-//         std::string keyword(context.substr(wordStart, wordLen));
-//         bool bold(false);
-//         if (keyword.substr(0, 5) == "bold_") {
-//             keyword = keyword.substr(5);
-//             bold = true;
-//         }
-//         bool underline(false);
-//         if (keyword.substr(0, 10) == "underline_") {
-//             keyword = keyword.substr(10);
-//             underline = true;
-//         }
-//         keyword_highlight_t::const_iterator it(word_color.find(keyword));
-//         Replxx::Color color = Replxx::Color::DEFAULT;
-//         if (it != word_color.end()) {
-//             color = it->second;
-//         }
-//         if (bold) {
-//             color = replxx::color::bold(color);
-//         }
-//         if (underline) {
-//             color = replxx::color::underline(color);
-//         }
-//         for (int k(0); k < wordLen; ++k) {
-//             Replxx::Color& c(colors.at(colorOffset + k));
-//             if (color != Replxx::Color::DEFAULT) {
-//                 c = color;
-//             }
-//         }
-//         colorOffset += wordLen;
-//         wordEnd = i;
-//     };
-//     for (int i(0); i < static_cast<int>(context.length()); ++i) {
-//         if (!inWord) {
-//             if (is_kw(context[i])) {
-//                 inWord = true;
-//                 wordStart = i;
-//             }
-//         } else if (inWord && !is_kw(context[i])) {
-//             dohl(i);
-//         }
-//         if ((context[i] != '_') && ispunct(context[i])) {
-//             wordStart = i;
-//             dohl(i + 1);
-//         }
-//     }
-//     if (inWord) {
-//         dohl(context.length());
-//     }
-// }
+            pos += len;
+            str = match.suffix();
+        }
+    }
+    bool inWord(false);
+    int wordStart(0);
+    int wordEnd(0);
+    int colorOffset(0);
+    auto dohl = [&](int i) {
+        inWord = false;
+        std::string intermission(context.substr(wordEnd, wordStart - wordEnd));
+        colorOffset +=
+            utf8str_codepoint_len(intermission.c_str(), intermission.length());
+        int wordLen(i - wordStart);
+        std::string keyword(context.substr(wordStart, wordLen));
+        bool bold(false);
+        if (keyword.substr(0, 5) == "bold_") {
+            keyword = keyword.substr(5);
+            bold = true;
+        }
+        bool underline(false);
+        if (keyword.substr(0, 10) == "underline_") {
+            keyword = keyword.substr(10);
+            underline = true;
+        }
+        keyword_highlight_t::const_iterator it(word_color.find(keyword));
+        Replxx::Color color = Replxx::Color::DEFAULT;
+        if (it != word_color.end()) {
+            color = it->second;
+        }
+        if (bold) {
+            color = replxx::color::bold(color);
+        }
+        if (underline) {
+            color = replxx::color::underline(color);
+        }
+        for (int k(0); k < wordLen; ++k) {
+            Replxx::Color& c(colors.at(colorOffset + k));
+            if (color != Replxx::Color::DEFAULT) {
+                c = color;
+            }
+        }
+        colorOffset += wordLen;
+        wordEnd = i;
+    };
+    for (int i(0); i < static_cast<int>(context.length()); ++i) {
+        if (!inWord) {
+            if (is_kw(context[i])) {
+                inWord = true;
+                wordStart = i;
+            }
+        } else if (inWord && !is_kw(context[i])) {
+            dohl(i);
+        }
+        if ((context[i] != '_') && ispunct(context[i])) {
+            wordStart = i;
+            dohl(i + 1);
+        }
+    }
+    if (inWord) {
+        dohl(context.length());
+    }
+}
 
 void hook_modify(std::string& currentInput_, int&, Replxx* rx) {
     char prompt[64];
     snprintf(prompt, 64, "\x1b[1;32mreplxx\x1b[0m[%lu]> ",
              currentInput_.length());
     rx->set_prompt(prompt);
-    // set_prompt(prompt);
 }
 
 Replxx::ACTION_RESULT message(Replxx& replxx, std::string s, char32_t) {
@@ -382,56 +380,55 @@ int main(int argc_, char** argv_) {
         {"\".*?\"", cl::BRIGHTGREEN},  // double quotes
         {"\'.*?\'", cl::BRIGHTGREEN},  // single quotes
     };
-    // static int const MAX_LABEL_NAME(32);
-    // char label[MAX_LABEL_NAME];
-    // for (int r(0); r < 6; ++r) {
-    //     for (int g(0); g < 6; ++g) {
-    //         for (int b(0); b < 6; ++b) {
-    //             snprintf(label, MAX_LABEL_NAME, "rgb%d%d%d", r, g, b);
-    //             word_color.insert(
-    //                 std::make_pair(label, replxx::color::rgb666(r, g, b)));
-    //             for (int br(0); br < 6; ++br) {
-    //                 for (int bg(0); bg < 6; ++bg) {
-    //                     for (int bb(0); bb < 6; ++bb) {
-    //                         snprintf(label, MAX_LABEL_NAME,
-    //                         "fg%d%d%dbg%d%d%d",
-    //                                  r, g, b, br, bg, bb);
-    //                         word_color.insert(std::make_pair(
-    //                             label,
-    //                             rgb666(r, g, b) |
-    //                                 replxx::color::bg(rgb666(br, bg, bb))));
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    // for (int gs(0); gs < 24; ++gs) {
-    //     snprintf(label, MAX_LABEL_NAME, "gs%d", gs);
-    //     word_color.insert(std::make_pair(label, grayscale(gs)));
-    //     for (int bgs(0); bgs < 24; ++bgs) {
-    //         snprintf(label, MAX_LABEL_NAME, "gs%dgs%d", gs, bgs);
-    //         word_color.insert(
-    //             std::make_pair(label, grayscale(gs) | bg(grayscale(bgs))));
-    //     }
-    // }
-    // Replxx::Color colorCodes[] = {
-    //     Replxx::Color::BLACK,         Replxx::Color::RED,
-    //     Replxx::Color::GREEN,         Replxx::Color::BROWN,
-    //     Replxx::Color::BLUE,          Replxx::Color::CYAN,
-    //     Replxx::Color::MAGENTA,       Replxx::Color::LIGHTGRAY,
-    //     Replxx::Color::GRAY,          Replxx::Color::BRIGHTRED,
-    //     Replxx::Color::BRIGHTGREEN,   Replxx::Color::YELLOW,
-    //     Replxx::Color::BRIGHTBLUE,    Replxx::Color::BRIGHTCYAN,
-    //     Replxx::Color::BRIGHTMAGENTA, Replxx::Color::WHITE};
-    // for (Replxx::Color bg : colorCodes) {
-    //     for (Replxx::Color fg : colorCodes) {
-    //         snprintf(label, MAX_LABEL_NAME, "c_%d_%d", static_cast<int>(fg),
-    //                  static_cast<int>(bg));
-    //         word_color.insert(
-    //             std::make_pair(label, fg | replxx::color::bg(bg)));
-    //     }
-    // }
+    static int const MAX_LABEL_NAME(32);
+    char label[MAX_LABEL_NAME];
+    for (int r(0); r < 6; ++r) {
+        for (int g(0); g < 6; ++g) {
+            for (int b(0); b < 6; ++b) {
+                snprintf(label, MAX_LABEL_NAME, "rgb%d%d%d", r, g, b);
+                word_color.insert(
+                    std::make_pair(label, replxx::color::rgb666(r, g, b)));
+                for (int br(0); br < 6; ++br) {
+                    for (int bg(0); bg < 6; ++bg) {
+                        for (int bb(0); bb < 6; ++bb) {
+                            snprintf(label, MAX_LABEL_NAME, "fg%d%d%dbg%d%d%d",
+                                     r, g, b, br, bg, bb);
+                            word_color.insert(std::make_pair(
+                                label,
+                                rgb666(r, g, b) |
+                                    replxx::color::bg(rgb666(br, bg, bb))));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (int gs(0); gs < 24; ++gs) {
+        snprintf(label, MAX_LABEL_NAME, "gs%d", gs);
+        word_color.insert(std::make_pair(label, grayscale(gs)));
+        for (int bgs(0); bgs < 24; ++bgs) {
+            snprintf(label, MAX_LABEL_NAME, "gs%dgs%d", gs, bgs);
+            word_color.insert(
+                std::make_pair(label, grayscale(gs) | bg(grayscale(bgs))));
+        }
+    }
+    Replxx::Color colorCodes[] = {
+        Replxx::Color::BLACK,         Replxx::Color::RED,
+        Replxx::Color::GREEN,         Replxx::Color::BROWN,
+        Replxx::Color::BLUE,          Replxx::Color::CYAN,
+        Replxx::Color::MAGENTA,       Replxx::Color::LIGHTGRAY,
+        Replxx::Color::GRAY,          Replxx::Color::BRIGHTRED,
+        Replxx::Color::BRIGHTGREEN,   Replxx::Color::YELLOW,
+        Replxx::Color::BRIGHTBLUE,    Replxx::Color::BRIGHTCYAN,
+        Replxx::Color::BRIGHTMAGENTA, Replxx::Color::WHITE};
+    for (Replxx::Color bg : colorCodes) {
+        for (Replxx::Color fg : colorCodes) {
+            snprintf(label, MAX_LABEL_NAME, "c_%d_%d", static_cast<int>(fg),
+                     static_cast<int>(bg));
+            word_color.insert(
+                std::make_pair(label, fg | replxx::color::bg(bg)));
+        }
+    }
 
     bool tickMessages(false);
     bool promptFan(false);
@@ -722,7 +719,7 @@ int main(int argc_, char** argv_) {
 
         } else if (input.compare(0, 7, ".prompt") == 0) {
             // set the repl prompt text
-            auto pos = input.find(' ');
+            auto pos = input.find(" ");
             if (pos == std::string::npos) {
                 std::cout << "Error: '.prompt' missing argument\n";
             } else {
