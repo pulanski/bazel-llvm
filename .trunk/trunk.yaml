@@ -52,8 +52,8 @@ runtimes:
         - python@3.10.3
         - go@1.18.3
         - node@16.14.2
-actions:
-    enabled:
-        - trunk-announce
-        - trunk-check-pre-push
-        - trunk-upgrade-available
+# actions:
+#     enabled:
+#         - trunk-announce
+#         - trunk-check-pre-push
+#         - trunk-upgrade-available
