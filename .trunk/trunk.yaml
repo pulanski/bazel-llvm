@@ -11,17 +11,14 @@ lint:
         # TODO fix issues with json here
         - taplo@0.7.0
         - svgo@3.0.2
-        # - clang-tidy@14.0.0
         - hadolint@2.12.0
         - shellcheck@0.8.0
         - eslint@8.23.1
         - flake8@6.0.0
         - black@22.10.0
         - autopep8
-        # - semgrep@0.114.0
         - stylelint
         - dotenv-linter
-        # - mypy@0.991
         - codespell
         - shfmt@3.5.0
         - isort@5.10.1
@@ -34,6 +31,9 @@ lint:
         - clang-format@14.0.0
         - terraform
         - tflint
+        # - semgrep@0.114.0
+        # - mypy@0.991
+        # - clang-tidy@14.0.0
     ignore:
         - linters: [prettier, svgo]
           paths:
