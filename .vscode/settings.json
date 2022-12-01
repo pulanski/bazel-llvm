@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./bazel-bazel-llvm/external/pip_torchvision/site-packages"
+    ]
+}

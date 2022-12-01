@@ -159,14 +159,16 @@ def create_generated_contents(
                 absolute_cc_source_path,
                 absolute_cc_build_path,
             )
+        case _:
+            return []
 
 
 def generated_cc_library_contents(
     label: str,
     args: argparse.Namespace,
-    absolute_cc_header_path: str,
-    absolute_cc_source_path: str,
-    absolute_cc_build_path: str,
+    # absolute_cc_header_path: str,
+    # absolute_cc_source_path: str,
+    # absolute_cc_build_path: str,
 ) -> List[str]:
     """
     Get the contents of a newly generated `cc_library`.

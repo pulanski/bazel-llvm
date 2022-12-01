@@ -1,7 +1,7 @@
 {
-  "watch": ["./"],
-  "events": {
-    "start": "clear"
-  },
-  "ext": "h,cc,bazel,bzl"
+    "watch": ["./"],
+    "events": {
+        "start": "clear"
+    },
+    "ext": "h,cc,bazel,bzl"
 }

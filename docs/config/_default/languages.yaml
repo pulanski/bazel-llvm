@@ -1,5 +1,5 @@
 ---
 en:
-    languageName: "English"
-    contentDir: "content/en"
+    languageName: 'English'
+    contentDir: 'content/en'
     weight: 10

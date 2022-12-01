@@ -1,4 +1,2 @@
-{{ range resources.Match "sprites/*.svg" }}
-  {{ printf "<!-- geekdoc include: %s -->" . | safeHTML }}
-  {{ .Content | safeHTML }}
-{{ end }}
+{{ range resources.Match "sprites/*.svg" }} {{ printf "<!-- geekdoc include: %s -->"
+. | safeHTML }} {{ .Content | safeHTML }} {{ end }}

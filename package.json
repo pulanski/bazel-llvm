@@ -1,0 +1,35 @@
+{
+    "name": "bazel-llvm",
+    "version": "0.0.1",
+    "description": "Exploring LLVM and Bazel",
+    "directories": {
+        "doc": "docs",
+        "example": "examples"
+    },
+    "devDependencies": {
+        "@types/node": "18.11.10",
+        "@typescript-eslint/eslint-plugin": "5.45.0",
+        "@typescript-eslint/parser": "5.45.0",
+        "eslint": "8.28.0",
+        "eslint-config-standard-with-typescript": "23.0.0",
+        "eslint-plugin-import": "2.26.0",
+        "eslint-plugin-n": "15.5.1",
+        "eslint-plugin-promise": "6.1.1",
+        "typescript": "4.9.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pulanski/bazel-llvm.git"
+    },
+    "keywords": [],
+    "author": "pulanski",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/pulanski/bazel-llvm/issues"
+    },
+    "homepage": "https://github.com/pulanski/bazel-llvm#readme",
+    "type": "module",
+    "volta": {
+        "node": "16.17.1"
+    }
+}

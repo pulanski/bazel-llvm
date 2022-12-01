@@ -47,9 +47,9 @@ bazel_dep(name = "glog", repo_name = "com_google_glog", version = "0.5.0")
 bazel_dep(name = "gflags", repo_name = "com_gflags_gflags", version = "2.2.2")
 bazel_dep(name = "fmt", repo_name = "com_fmtlib_fmt", version = "8.1.1")
 bazel_dep(name = "zlib", repo_name = "com_madler_zlib", version = "1.2.13")
+bazel_dep(name = "rules_pkg", version = "0.7.0")
 bazel_dep(name = "rules_go", repo_name = "io_bazel_rules_go", version = "0.35.0")
 bazel_dep(name = "gazelle", repo_name = "bazel_gazelle", version = "0.28.0")
-bazel_dep(name = "rules_pkg", version = "0.7.0")
 
 # TODO look into using this. Currently, it's not working.
 # Extensions doesn't seem to be exporting python properly.

@@ -1,5 +1,3 @@
-{{ $id := .Get 0 }}
-
-{{- with $id -}}
-  <svg class="gdoc-icon {{ . }}"><use xlink:href="#{{ . }}"></use></svg>
+{{ $id := .Get 0 }} {{- with $id -}}
+<svg class="gdoc-icon {{ . }}"><use xlink:href="#{{ . }}"></use></svg>
 {{- end -}}

@@ -2,7 +2,7 @@
 description: >
     This is a more complex example, using multi-language configuration for open source docs.
 images:
-    - "socialmedia2.png"
+    - 'socialmedia2.png'
 
 geekdocToC: 3
 geekdocTagsToMenu: true

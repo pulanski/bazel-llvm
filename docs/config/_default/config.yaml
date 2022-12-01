@@ -41,4 +41,4 @@ outputs:
 security:
     exec:
         allow:
-            - "^asciidoctor$"
+            - '^asciidoctor$'
