@@ -46,12 +46,12 @@ def generate_cc_library(
 
     # check if both the header and cc files already exist
     if os.path.exists(source_contents.header_file.absolute_path) and os.path.exists(
-        source_contents.source_file.absolute_path
+        source_contents.source_file.absolute_path,
     ):
         if args.force:
             info(
                 f"{fg('grey_69')}`{fg('black')}--{fg('yellow')}force{fg('grey_69')}`"
-                " flag is set, overwriting existing files"
+                " flag is set, overwriting existing files",
             )
         else:
             error(
@@ -61,7 +61,7 @@ def generate_cc_library(
                 f" {fg('green')}{source_contents.source_file.relative_path} {fg('grey_69')} already"
                 " exists. Use"
                 f" `{fg('black')}--{fg('yellow')}force{fg('grey_69')}`"
-                " to overwrite them."
+                " to overwrite them.",
             )
 
     log_library_generation(source_contents.relative_dir, args)
@@ -75,7 +75,7 @@ def generate_cc_library(
     # if the build file exists, append to it
     if os.path.isfile(source_contents.build_file.absolute_path):
         # read the contents of the build file
-        build_file = open(source_contents.build_file.absolute_path, "r")
+        build_file = open(source_contents.build_file.absolute_path)
         existing_build_file_content = build_file.read()
         build_file.close()
 

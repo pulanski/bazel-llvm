@@ -37,4 +37,12 @@ TEST(SourceBufferTest, CreateFromSourceText) {
     ASSERT_EQ(expected_buffer->get()->contents(), "Hello World");
 }
 
+TEST(SourceBufferTest, FileDoesNotExist) {
+    StatusOr<unique_ptr<SourceBuffer>> expected_buffer =
+        SourceBufferFactory::createFromFile("non_existent_file.txt");
+
+    ASSERT_FALSE(expected_buffer.ok());
+    ASSERT_EQ(expected_buffer.status().code(), absl::StatusCode::kNotFound);
+}
+
 }  // namespace Mandelbrot::Testing

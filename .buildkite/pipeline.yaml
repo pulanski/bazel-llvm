@@ -1,32 +1,32 @@
 steps:
-    - group: ":buildkite: :mac: :coverage: Static Analysis"
-      key: "static-analysis"
+    - group: ':buildkite: :mac: :coverage: Static Analysis'
+      key: 'static-analysis'
       steps:
-          - label: ":testobject: cppcheck"
-            command: "cppcheck ./"
+          - label: ':testobject: cppcheck'
+            command: 'cppcheck ./'
             agents:
-                os: "macOS"
-          - label: ":cmake: clang-format"
-            command: "fd --extension cc --extension h --exec clang-format -style=Google"
+                os: 'macOS'
+          - label: ':cmake: clang-format'
+            command: 'fd --extension cc --extension h --exec clang-format -style=Google'
             agents:
-                os: "macOS"
-          - label: ":repolinter: trunk check"
-            command: "trunk check --ci --filter=markdownlint"
+                os: 'macOS'
+          - label: ':repolinter: trunk check'
+            command: 'trunk check --ci --filter=markdownlint'
             agents:
-                os: "macOS"
-    - label: ":buildkite: :bazel: :mac: bazel build //..."
-      command: "bazel build //..."
+                os: 'macOS'
+    - label: ':buildkite: :bazel: :mac: bazel build //...'
+      command: 'bazel build //...'
       agents:
-          os: "macOS"
-    - label: ":buildkite: :bazel: :docker: bazel build //..."
-      command: "bazel build //..."
+          os: 'macOS'
+    - label: ':buildkite: :bazel: :docker: bazel build //...'
+      command: 'bazel build //...'
       agents:
-          docker: "true"
-    - label: ":buildkite: :bazel: :mac: :test_tube: bazel test //..."
-      command: "bazel test -- //... -:requirements_test"
+          docker: 'true'
+    - label: ':buildkite: :bazel: :mac: :test_tube: bazel test //...'
+      command: 'bazel test -- //... -:requirements_test'
       agents:
-          os: "macOS"
-    - label: ":buildkite: :bazel: :docker: bazel test //..."
-      command: "bazel test -- //... -:requirements_test"
+          os: 'macOS'
+    - label: ':buildkite: :bazel: :docker: bazel test //...'
+      command: 'bazel test -- //... -:requirements_test'
       agents:
-          docker: "true"
+          docker: 'true'

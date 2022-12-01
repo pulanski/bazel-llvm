@@ -42,7 +42,7 @@ class GeneratedFile:
                 f"{fg('grey_69')}Relative path: {fg('red')}{self.relative_path}{attr('reset')}",
                 f"{fg('grey_69')}Absolute path: {fg('yellow')}{self.absolute_path}{attr('reset')}",
                 "",
-            ]
+            ],
         )
 
     def __repr__(self):
@@ -84,7 +84,7 @@ class GeneratedSourceContents:
                 str(self.build_file),
                 str(self.header_file),
                 str(self.source_file),
-            ]
+            ],
         )
 
     def __repr__(self):

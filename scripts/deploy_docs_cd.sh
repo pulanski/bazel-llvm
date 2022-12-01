@@ -14,7 +14,7 @@ ON_YELLOW='\033[43m' # Yellow
 # This script is used to generate the documentation for the
 # JIT compiler as well as the repo as a whole. It is used
 # by the CI system to generate the documentation for the
-# website.
+# docs website.
 
 # This script is meant to be run from the root of the repo.
 

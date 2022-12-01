@@ -48,7 +48,7 @@ def log_dry_run_and_exit():
         f"\n{bg('yellow')} DRY RUN {attr('reset')} {fg('grey_69')}No"
         " files were written to disk. Re-run without the"
         f" `{fg('black')}--{fg('yellow')}dry_run{fg('grey_69')}` flag"
-        f" to write files to disk.{attr('reset')}"
+        f" to write files to disk.{attr('reset')}",
     )
     exit(0)
 
@@ -69,7 +69,7 @@ def log_generated_target(args: argparse.Namespace):
                 f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
                 " directory"
                 f' {fg("green")}{relative_dir}{fg("grey_69")} with'
-                f' target {fg("blue")}:{target}{attr("reset")}'
+                f' target {fg("blue")}:{target}{attr("reset")}',
             )
         case "bin":
             info(
@@ -77,7 +77,7 @@ def log_generated_target(args: argparse.Namespace):
                 f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
                 " directory"
                 f' {fg("green")}{relative_dir}{fg("grey_69")} with'
-                f' target {fg("blue")}:{target}{attr("reset")}'
+                f' target {fg("blue")}:{target}{attr("reset")}',
             )
         case "test":
             info(
@@ -85,7 +85,7 @@ def log_generated_target(args: argparse.Namespace):
                 f' target{fg("yellow")} {args.label}{fg("grey_69")} in'
                 " directory"
                 f' {fg("green")}{relative_dir}{fg("grey_69")} with'
-                f' target {fg("blue")}:{target}{attr("reset")}'
+                f' target {fg("blue")}:{target}{attr("reset")}',
             )
 
 
@@ -127,7 +127,7 @@ def log_library_generation(
     # library file
     info(
         f"{fg('grey_69')}Creating"
-        f" {fg('green')}{relative_cc_source_path}{fg('black')} ..."
+        f" {fg('green')}{relative_cc_source_path}{fg('black')} ...",
     )
     if args.verbose:
         log_generated_contents(cc_source_contents)
@@ -135,7 +135,7 @@ def log_library_generation(
     # header file
     info(
         f"{fg('grey_69')}Creating"
-        f" {fg('green')}{relative_cc_header_path}{fg('black')} ..."
+        f" {fg('green')}{relative_cc_header_path}{fg('black')} ...",
     )
     if args.verbose:
         log_generated_contents(cc_header_contents)
@@ -144,12 +144,12 @@ def log_library_generation(
     if os.path.exists(absolute_build_file_path):
         info(
             f"{fg('grey_69')}Appending to"
-            f" {fg('green')}{relative_build_file_path}{fg('black')} ..."
+            f" {fg('green')}{relative_build_file_path}{fg('black')} ...",
         )
     else:
         info(
             f"{fg('grey_69')}Creating"
-            f" {fg('green')}{relative_build_file_path}{fg('black')} ..."
+            f" {fg('green')}{relative_build_file_path}{fg('black')} ...",
         )
 
     if args.verbose:

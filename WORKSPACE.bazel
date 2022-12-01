@@ -15,7 +15,7 @@ RULES_PYTHON_SHA = "4605a15abef6454511653f3d6dd26bce10b4f924a72299d2fdcf42f63131
 
 RULES_PYTHON_VERSION = "a364fcac97b7ccadb5c5a703ec8ce2f2ecef0d97"
 
-PYTHON_VERSION = "3.9.10"
+PYTHON_VERSION = "3.10.6"
 
 # Docker
 RULES_DOCKER_SHA = "b1e80761a8a8243d03ebca8845e9cc1ba6c82ce7c5179ce2b295cd36f7e394bf"
@@ -131,13 +131,13 @@ http_archive(
 load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_register_toolchains(
-    name = "python3_9",
+    name = "python3_10",
     # Available versions are listed in @rules_python//python:versions.bzl.
     # We recommend using the same version your team is already standardized on.
     python_version = PYTHON_VERSION,
 )
 
-# load("@python3_9//:defs.bzl", "interpreter")
+load("@python3_10//:defs.bzl", "interpreter")
 load("@rules_python//python:pip.bzl", "pip_parse")
 
 pip_parse(
@@ -147,7 +147,7 @@ pip_parse(
     # can be passed
     # environment = {"HTTPS_PROXY": "http://my.proxy.fun/"},
     name = "pip",
-    # python_interpreter_target = interpreter,
+    python_interpreter_target = interpreter,
     requirements_lock = "//:requirements_lock.txt",
 )
 
@@ -155,6 +155,12 @@ load("@pip//:requirements.bzl", "install_deps")
 
 # Initialize repositories for all packages in requirements_lock.txt.
 install_deps()
+
+# # To compile the rules_python gazelle extension from source,
+# # we must fetch some third-party go dependencies that it uses.
+# load("@rules_python//gazelle:deps.bzl", _py_gazelle_deps = "gazelle_deps")
+
+# _py_gazelle_deps()
 
 ########
 # Hugo #
@@ -260,7 +266,7 @@ git_repository(
 # See https://github.com/hedronvision/bazel-compile-commands-extractor for more details.
 # NOTE: I've been incredibly happy with this tool. It's been a huge help in getting
 # IDE support for third-party libraries working when using Bazel w/ C family languages,
-# primarly C++
+# primarily C++
 http_archive(
     name = "hedron_compile_commands",
     sha256 = HEDRON_SHA,

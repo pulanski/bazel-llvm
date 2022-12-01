@@ -94,4 +94,3 @@ output "service_url" {
 #   location      = var.region
 #   force_destroy = true
 # }
-
