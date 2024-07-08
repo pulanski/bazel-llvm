@@ -209,8 +209,8 @@ filegroup(
     visibility = ["//visibility:public"]
 )
     """,
-    sha256 = "5d1bac0a5db5f3fe8684e7fb617ff296cdb3c5ee5f4c4e9eb89f697d85e83194",
-    url = "https://github.com/thegeeklab/hugo-geekdoc/releases/download/v0.36.1/hugo-geekdoc.tar.gz",
+    sha256 = "45c9db6f4814cee7017b8e783a7b7598d059920a01a0566bb0051a3b2cf2a1b9",
+    url = "https://github.com/thegeeklab/hugo-geekdoc/releases/download/v0.47.0/hugo-geekdoc.tar.gz",
 )
 
 ########
